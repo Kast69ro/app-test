@@ -1,0 +1,132 @@
+import 'package:activbank_qr/app/app.dart';
+import 'package:activbank_qr/app/bootstrap.dart';
+import 'package:activbank_qr/core/api/api_providers.dart';
+import 'package:activbank_qr/core/security/pin_hasher.dart';
+import 'package:activbank_qr/core/storage/secure_store.dart';
+import 'package:activbank_qr/features/pin/data/pin_repository.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+import 'fake_http.dart';
+
+/// Ненастоящий бэк для виджет-тестов: ответы по пути запроса.
+class FakeBackend {
+  int verifyStatus = 200;
+  bool terminalFails = false;
+  final requests = <String>[];
+
+  Future<ResponseBody> respond(RequestOptions o) async {
+    requests.add(o.path);
+    switch (o.path) {
+      case '/pos/otp/request':
+        return jsonBody(200, {'ok': true, 'expires_in': 300});
+      case '/pos/otp/verify':
+        if (verifyStatus != 200) {
+          return jsonBody(verifyStatus, {'detail': 'Осталось попыток: 4'});
+        }
+        return jsonBody(200, {
+          'ok': true,
+          'terminalId': 12345,
+          'terminalName': 'Магазин на Рудаки',
+          'storeName': 'ООО Ромашка',
+        });
+      case '/pos/terminal':
+        if (terminalFails) {
+          throw DioException.connectionError(requestOptions: o, reason: 'x');
+        }
+        return jsonBody(200, {
+          'terminal': {
+            'terminalName': 'Магазин на Рудаки',
+            'terminalPhone': '+992931234567',
+            'storeName': 'ООО Ромашка',
+            'terminalQR': '00020101021126360014tj.nbt.qr0114992931234567',
+          },
+          'last_payment': {
+            'sender': 'Душанбе Сити Банк',
+            'amount': 150,
+            'status': 'success',
+            'creation_datetime': '2026-09-08T14:12:00',
+          },
+        });
+      case '/pos/summary':
+        return jsonBody(200, {
+          'success': {'count': 21, 'amount': 795},
+          'cancel': {'count': 2, 'amount': 60},
+        });
+    }
+    return jsonBody(404, {'detail': 'Not Found'});
+  }
+}
+
+/// Приложение с памятью вместо хранилища и ненастоящим бэком.
+/// По умолчанию — маленький экран (320×568) и шрифт 1,3×.
+Future<MemorySecureStore> pumpTestApp(
+  WidgetTester tester,
+  FakeBackend backend, {
+  MemorySecureStore? store,
+  Size size = const Size(320, 568),
+  double textScale = 1.3,
+}) async {
+  tester.view.physicalSize = size;
+  tester.view.devicePixelRatio = 1;
+  tester.platformDispatcher.textScaleFactorTestValue = textScale;
+  addTearDown(tester.view.reset);
+  addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+
+  final mem = store ?? MemorySecureStore();
+  await tester.pumpWidget(
+    ProviderScope(
+      // Новый ключ — новый контейнер: имитирует перезапуск приложения.
+      key: UniqueKey(),
+      retry: noRetry,
+      overrides: [
+        secureStoreProvider.overrideWithValue(mem),
+        pinRepositoryProvider.overrideWithValue(
+          PinRepository(mem, hasher: const PinHasher(iterations: 10)),
+        ),
+        apiClientProvider.overrideWith(
+          (ref) => fakeApi(
+            backend.respond,
+            readPhone: () => ref.read(authCredentialsProvider),
+          ).client,
+        ),
+      ],
+      child: const ActivBankApp(),
+    ),
+  );
+  await tester.pumpAndSettle();
+  return mem;
+}
+
+Future<void> typeDigits(WidgetTester tester, String digits) async {
+  for (final d in digits.split('')) {
+    await tester.tap(find.bySemanticsLabel(d).last);
+    await tester.pump();
+  }
+}
+
+/// Хеширование кода идёт в изоляте — ему нужно настоящее время.
+Future<void> settleWithIsolate(WidgetTester tester) async {
+  await tester.pump(const Duration(milliseconds: 200));
+  await tester.runAsync(
+    () => Future<void>.delayed(const Duration(milliseconds: 500)),
+  );
+  await tester.pumpAndSettle();
+}
+
+/// Вход по OTP и создание кода 1234 — до главной.
+Future<void> signIn(WidgetTester tester) async {
+  await typeDigits(tester, '931234567');
+  await tester.tap(find.text('Получить код'));
+  await tester.pumpAndSettle(const Duration(milliseconds: 100));
+  await typeDigits(tester, '123456');
+  await tester.pump(const Duration(milliseconds: 300));
+  await tester.pumpAndSettle();
+  await typeDigits(tester, '1234');
+  await tester.pump(const Duration(milliseconds: 200));
+  await tester.pumpAndSettle();
+  await typeDigits(tester, '1234');
+  await settleWithIsolate(tester);
+}
