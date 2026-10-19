@@ -7,4 +7,5 @@ abstract final class Routes {
   static const settings = '/home/settings';
   static const changePin = '/home/settings/pin';
   static const history = '/history';
+  static const payment = '/history/payment';
 }

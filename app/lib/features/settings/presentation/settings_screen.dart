@@ -8,6 +8,7 @@ import '../../../core/theme/app_dimens.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/phone_format.dart';
 import '../../../core/widgets/confirm_logout.dart';
+import '../../../core/widgets/info_card.dart';
 import '../../../core/widgets/text_link.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../auth/presentation/session_controller.dart';
@@ -44,12 +45,12 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 18),
-            _Card(
+            InfoCard(
               children: [
-                _Field(l.settingsTerminal, orDash(session?.terminalName)),
-                _Field(l.settingsStore, orDash(session?.storeName)),
-                _Field(l.settingsTerminalId, orDash(session?.terminalId)),
-                _Field(
+                InfoRow(l.settingsTerminal, orDash(session?.terminalName)),
+                InfoRow(l.settingsStore, orDash(session?.storeName)),
+                InfoRow(l.settingsTerminalId, orDash(session?.terminalId)),
+                InfoRow(
                   l.settingsPhone,
                   session == null ? '—' : formatPhoneHidden(session.phone),
                 ),
@@ -74,65 +75,6 @@ class SettingsScreen extends ConsumerWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-/// Белая карточка с полями «название — значение», как реквизиты операции.
-class _Card extends StatelessWidget {
-  const _Card({required this.children});
-
-  final List<Widget> children;
-
-  @override
-  Widget build(BuildContext context) {
-    final spaced = <Widget>[];
-    for (var i = 0; i < children.length; i++) {
-      if (i > 0) spaced.add(const SizedBox(height: 14));
-      spaced.add(children[i]);
-    }
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        border: Border.all(color: AppColors.borderList),
-        borderRadius: BorderRadius.circular(AppDimens.radiusRow),
-      ),
-      child: Column(children: spaced),
-    );
-  }
-}
-
-class _Field extends StatelessWidget {
-  const _Field(this.label, this.value);
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.baseline,
-      textBaseline: TextBaseline.alphabetic,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(fontSize: 14, color: AppColors.textSecondary),
-        ),
-        const SizedBox(width: 14),
-        Expanded(
-          child: Text(
-            value,
-            textAlign: TextAlign.right,
-            style: const TextStyle(
-              fontFamily: AppFonts.mono,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: AppColors.textPrimary,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

@@ -54,6 +54,7 @@ void main() {
     test('время и дата', () {
       expect(formatTime(DateTime(2026, 9, 8, 4, 5)), '04:05');
       expect(formatDayMonth(DateTime(2026, 1, 3)), '03.01');
+      expect(formatFullDate(DateTime(2026, 1, 3)), '03.01.2026');
       expect(formatIsoDate(DateTime(2026, 9, 8, 23, 59)), '2026-09-08');
     });
 

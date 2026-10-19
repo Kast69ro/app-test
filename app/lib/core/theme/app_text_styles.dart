@@ -20,6 +20,14 @@ abstract final class AppTextStyles {
     color: AppColors.textPrimary,
   );
 
+  /// Заголовок вкладки («История»).
+  static const tabTitle = TextStyle(
+    fontSize: 26,
+    fontWeight: FontWeight.w600,
+    letterSpacing: -0.52,
+    color: AppColors.textPrimary,
+  );
+
   static const terminalTitle = TextStyle(
     fontSize: 22,
     fontWeight: FontWeight.w600,

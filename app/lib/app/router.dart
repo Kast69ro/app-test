@@ -9,6 +9,8 @@ import '../features/auth/presentation/session_controller.dart';
 import '../features/history/presentation/history_screen.dart';
 import '../features/home/presentation/home_screen.dart';
 import '../features/home/presentation/qr_fullscreen_screen.dart';
+import '../features/payment/domain/payment.dart';
+import '../features/payment/presentation/payment_screen.dart';
 import '../features/pin/presentation/change_pin_screen.dart';
 import '../features/pin/presentation/pin_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
@@ -114,6 +116,18 @@ GoRouter router(Ref ref) {
               GoRoute(
                 path: Routes.history,
                 builder: (context, state) => const HistoryScreen(),
+                routes: [
+                  // Платёж передаётся через `extra`: своего ID у него нет.
+                  // Без `extra` (например, после восстановления) — в историю.
+                  GoRoute(
+                    path: 'payment',
+                    parentNavigatorKey: rootKey,
+                    redirect: (context, state) =>
+                        state.extra is Payment ? null : Routes.history,
+                    builder: (context, state) =>
+                        PaymentScreen(payment: state.extra! as Payment),
+                  ),
+                ],
               ),
             ],
           ),

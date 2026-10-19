@@ -7,6 +7,7 @@ import 'package:activbank_qr/features/pin/data/pin_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 
 import 'fake_http.dart';
@@ -15,6 +16,10 @@ import 'fake_http.dart';
 class FakeBackend {
   int verifyStatus = 200;
   bool terminalFails = false;
+  bool historyFails = false;
+
+  /// Платежи для `/pos/history`, от новых к старым. Отдаются постранично.
+  List<Map<String, Object?>> history = [];
   final requests = <String>[];
 
   Future<ResponseBody> respond(RequestOptions o) async {
@@ -55,6 +60,20 @@ class FakeBackend {
           'success': {'count': 21, 'amount': 795},
           'cancel': {'count': 2, 'amount': 60},
         });
+      case '/pos/history':
+        if (historyFails) {
+          throw DioException.connectionError(requestOptions: o, reason: 'x');
+        }
+        final offset = int.parse('${o.queryParameters['offset'] ?? 0}');
+        final limit = int.parse('${o.queryParameters['limit'] ?? 50}');
+        final page = history.skip(offset).take(limit).toList();
+        return jsonBody(200, {
+          'total': history.length,
+          'limit': limit,
+          'offset': offset,
+          'count': page.length,
+          'payments': page,
+        });
     }
     return jsonBody(404, {'detail': 'Not Found'});
   }
@@ -68,6 +87,7 @@ Future<MemorySecureStore> pumpTestApp(
   MemorySecureStore? store,
   Size size = const Size(320, 568),
   double textScale = 1.3,
+  List<Override> overrides = const [],
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
@@ -92,6 +112,7 @@ Future<MemorySecureStore> pumpTestApp(
             readPhone: () => ref.read(authCredentialsProvider),
           ).client,
         ),
+        ...overrides,
       ],
       child: const ActivBankApp(),
     ),

@@ -21,6 +21,10 @@ String formatTime(DateTime d) => '${_two(d.hour)}:${_two(d.minute)}';
 /// `08.09` — дата в реквизитах операции.
 String formatDayMonth(DateTime d) => '${_two(d.day)}.${_two(d.month)}';
 
+/// `08.09.2026` — дата в чеке.
+String formatFullDate(DateTime d) =>
+    '${formatDayMonth(d)}.${d.year.toString().padLeft(4, '0')}';
+
 /// `2026-09-08` — параметр `date` для API.
 String formatIsoDate(DateTime d) =>
     '${d.year.toString().padLeft(4, '0')}-${_two(d.month)}-${_two(d.day)}';

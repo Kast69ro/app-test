@@ -189,6 +189,66 @@ class AppLocalizationsRu extends AppLocalizations {
   String get statusUnknown => 'Неизвестно';
 
   @override
+  String get historyEmpty =>
+      'Пока нет операций. Потяните список вниз, чтобы обновить.';
+
+  @override
+  String historyLoadMore(int count) {
+    return 'Показать ещё ($count)';
+  }
+
+  @override
+  String get historyLoadingMore => 'Загружаем…';
+
+  @override
+  String get historyNoDate => 'Без даты';
+
+  @override
+  String get paymentDate => 'Дата';
+
+  @override
+  String get paymentTime => 'Время';
+
+  @override
+  String get paymentBank => 'Банк-отправитель';
+
+  @override
+  String get paymentTrail => 'Ход операции';
+
+  @override
+  String get paymentTrailCreated => 'QR создан';
+
+  @override
+  String get paymentTrailScanned => 'Клиент отсканировал';
+
+  @override
+  String get paymentRefund => 'Возврат платежа';
+
+  @override
+  String get paymentShare => 'Поделиться чеком';
+
+  @override
+  String get paymentSharing => 'Готовим чек…';
+
+  @override
+  String get paymentShareError => 'Не удалось — повторить';
+
+  @override
+  String get receiptTitle => 'Чек об операции';
+
+  @override
+  String get receiptAmount => 'Сумма';
+
+  @override
+  String get receiptStatus => 'Статус';
+
+  @override
+  String get receiptBank => 'Банк';
+
+  @override
+  String get receiptFooter => 'Сохраните чек для обращения в банк';
+
+  @override
   String get back => 'Назад';
 
   @override

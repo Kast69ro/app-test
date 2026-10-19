@@ -424,6 +424,120 @@ abstract class AppLocalizations {
   /// **'Неизвестно'**
   String get statusUnknown;
 
+  /// No description provided for @historyEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пока нет операций. Потяните список вниз, чтобы обновить.'**
+  String get historyEmpty;
+
+  /// No description provided for @historyLoadMore.
+  ///
+  /// In ru, this message translates to:
+  /// **'Показать ещё ({count})'**
+  String historyLoadMore(int count);
+
+  /// No description provided for @historyLoadingMore.
+  ///
+  /// In ru, this message translates to:
+  /// **'Загружаем…'**
+  String get historyLoadingMore;
+
+  /// No description provided for @historyNoDate.
+  ///
+  /// In ru, this message translates to:
+  /// **'Без даты'**
+  String get historyNoDate;
+
+  /// No description provided for @paymentDate.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дата'**
+  String get paymentDate;
+
+  /// No description provided for @paymentTime.
+  ///
+  /// In ru, this message translates to:
+  /// **'Время'**
+  String get paymentTime;
+
+  /// No description provided for @paymentBank.
+  ///
+  /// In ru, this message translates to:
+  /// **'Банк-отправитель'**
+  String get paymentBank;
+
+  /// No description provided for @paymentTrail.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ход операции'**
+  String get paymentTrail;
+
+  /// No description provided for @paymentTrailCreated.
+  ///
+  /// In ru, this message translates to:
+  /// **'QR создан'**
+  String get paymentTrailCreated;
+
+  /// No description provided for @paymentTrailScanned.
+  ///
+  /// In ru, this message translates to:
+  /// **'Клиент отсканировал'**
+  String get paymentTrailScanned;
+
+  /// No description provided for @paymentRefund.
+  ///
+  /// In ru, this message translates to:
+  /// **'Возврат платежа'**
+  String get paymentRefund;
+
+  /// No description provided for @paymentShare.
+  ///
+  /// In ru, this message translates to:
+  /// **'Поделиться чеком'**
+  String get paymentShare;
+
+  /// No description provided for @paymentSharing.
+  ///
+  /// In ru, this message translates to:
+  /// **'Готовим чек…'**
+  String get paymentSharing;
+
+  /// No description provided for @paymentShareError.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не удалось — повторить'**
+  String get paymentShareError;
+
+  /// No description provided for @receiptTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек об операции'**
+  String get receiptTitle;
+
+  /// No description provided for @receiptAmount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма'**
+  String get receiptAmount;
+
+  /// No description provided for @receiptStatus.
+  ///
+  /// In ru, this message translates to:
+  /// **'Статус'**
+  String get receiptStatus;
+
+  /// No description provided for @receiptBank.
+  ///
+  /// In ru, this message translates to:
+  /// **'Банк'**
+  String get receiptBank;
+
+  /// No description provided for @receiptFooter.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сохраните чек для обращения в банк'**
+  String get receiptFooter;
+
   /// No description provided for @back.
   ///
   /// In ru, this message translates to:
