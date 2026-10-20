@@ -64,3 +64,33 @@ jobs:
         with:
           name: activbank-qr-dev-apk
           path: app/build/app/outputs/flutter-apk/app-dev-debug.apk
+
+  # Проверка, что iOS собирается. Подписи нет: dev — под симулятор, prod — release без подписи.
+  ios:
+    needs: check
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - run: flutter pub get
+      - run: dart run build_runner build
+
+      - name: Сборка dev под симулятор
+        run: flutter build ios --simulator --debug --flavor dev -t lib/main_dev.dart
+
+      - name: Сборка prod release без подписи
+        run: flutter build ios --release --no-codesign --flavor prod -t lib/main_prod.dart
+
+      # ditto сохраняет права на исполняемый файл — иначе .app не запустится в симуляторе.
+      - name: Упаковка .app для симулятора
+        run: ditto -c -k --keepParent build/ios/iphonesimulator/Runner.app activbank-qr-dev-simulator.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: activbank-qr-dev-simulator
+          path: app/activbank-qr-dev-simulator.zip
