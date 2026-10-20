@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_dimens.dart';
 import '../theme/app_text_styles.dart';
 
-/// Лого + «ActivBank QR / кабинет мерчанта» на экранах входа и кода.
+/// Лого + «Activ QR / кабинет мерчанта» на экранах входа и кода.
 class BrandHeader extends StatelessWidget {
   const BrandHeader({super.key});
 
@@ -27,7 +27,7 @@ class BrandHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'ActivBank QR',
+                'Activ QR',
                 style: AppTextStyles.brandName,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,

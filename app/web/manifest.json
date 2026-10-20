@@ -1,6 +1,6 @@
 {
-    "name": "activbank_qr",
-    "short_name": "activbank_qr",
+    "name": "Activ QR",
+    "short_name": "Activ QR",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

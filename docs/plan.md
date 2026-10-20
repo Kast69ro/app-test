@@ -7,7 +7,7 @@
 - Flutter SDK стоит локально (`D:\dev\flutter`): `dart format`, `flutter analyze`, `flutter test`
   и предпросмотр в браузере (`flutter run -d chrome --flavor dev -t lib/main_dev.dart`, только вёрстка).
 - APK / AAB / IPA собираются в GitHub Actions. Android SDK и Xcode локально не нужны.
-- Старые файлы (`POS Terminal.dc.html`, `apk/`, `*.js`) не удаляем, пока Flutter-версия
+- Прототип (`POS Terminal.dc.html`, `*.js`, `assets/`) не удаляем, пока Flutter-версия
   не догонит прототип. Потом — в `legacy/`.
 
 ## Этапы

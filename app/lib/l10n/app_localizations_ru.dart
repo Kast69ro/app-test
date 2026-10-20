@@ -10,7 +10,7 @@ class AppLocalizationsRu extends AppLocalizations {
   AppLocalizationsRu([String locale = 'ru']) : super(locale);
 
   @override
-  String get appTitle => 'ActivBank QR';
+  String get appTitle => 'Activ QR';
 
   @override
   String get appSubtitle => 'кабинет мерчанта';
@@ -93,7 +93,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get errTerminalNotFound => 'Терминал с таким номером не найден.';
 
   @override
-  String get errNotOurMerchant => 'Терминал не подключён к ActivBank QR.';
+  String get errNotOurMerchant => 'Терминал не подключён к Activ QR.';
 
   @override
   String get errOtpTooSoon => 'Код уже отправляли. Подождите немного.';

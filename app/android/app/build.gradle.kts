@@ -41,11 +41,11 @@ android {
         create("dev") {
             dimension = "env"
             applicationIdSuffix = ".dev"
-            resValue("string", "app_name", "ActivBank QR Dev")
+            resValue("string", "app_name", "Activ QR Dev")
         }
         create("prod") {
             dimension = "env"
-            resValue("string", "app_name", "ActivBank QR")
+            resValue("string", "app_name", "Activ QR")
         }
     }
 

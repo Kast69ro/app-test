@@ -1,4 +1,4 @@
-# ActivBank QR
+# Activ QR
 
 Flutter-приложение мерчанта ActivBank (iOS + Android): статический QR, история поступлений, чек.
 Подробности — `../CLAUDE.md` и `../docs/plan.md`.
@@ -27,8 +27,8 @@ flutter run --flavor prod -t lib/main_prod.dart
 
 | Flavor | Bundle ID (iOS)                | Application ID (Android)          | Название         |
 |--------|--------------------------------|-----------------------------------|------------------|
-| dev    | `tj.activbank.activbankQr.dev` | `tj.activbank.activbank_qr.dev`   | ActivBank QR Dev |
-| prod   | `tj.activbank.activbankQr`     | `tj.activbank.activbank_qr`       | ActivBank QR     |
+| dev    | `tj.activbank.activbankQr.dev` | `tj.activbank.activbank_qr.dev`   | Activ QR Dev |
+| prod   | `tj.activbank.activbankQr`     | `tj.activbank.activbank_qr`       | Activ QR         |
 
 dev и prod можно поставить на одно устройство одновременно.
 

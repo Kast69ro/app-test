@@ -97,7 +97,7 @@ abstract class AppLocalizations {
   /// No description provided for @appTitle.
   ///
   /// In ru, this message translates to:
-  /// **'ActivBank QR'**
+  /// **'Activ QR'**
   String get appTitle;
 
   /// No description provided for @appSubtitle.
@@ -253,7 +253,7 @@ abstract class AppLocalizations {
   /// No description provided for @errNotOurMerchant.
   ///
   /// In ru, this message translates to:
-  /// **'Терминал не подключён к ActivBank QR.'**
+  /// **'Терминал не подключён к Activ QR.'**
   String get errNotOurMerchant;
 
   /// No description provided for @errOtpTooSoon.

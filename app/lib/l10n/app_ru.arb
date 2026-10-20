@@ -1,6 +1,6 @@
 {
   "@@locale": "ru",
-  "appTitle": "ActivBank QR",
+  "appTitle": "Activ QR",
   "appSubtitle": "кабинет мерчанта",
   "retry": "Повторить",
   "logout": "Выйти",
@@ -41,7 +41,7 @@
   "loginVerifying": "Проверяем код…",
 
   "errTerminalNotFound": "Терминал с таким номером не найден.",
-  "errNotOurMerchant": "Терминал не подключён к ActivBank QR.",
+  "errNotOurMerchant": "Терминал не подключён к Activ QR.",
   "errOtpTooSoon": "Код уже отправляли. Подождите немного.",
   "errOtpWrong": "Неверный код или истёк срок действия.",
   "errOtpTooMany": "Слишком много попыток. Запросите новый код.",
