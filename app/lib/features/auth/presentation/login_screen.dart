@@ -193,7 +193,7 @@ class _LinkButton extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 color: color,
-                fontFamily: mono ? AppFonts.mono : null,
+                fontFeatures: mono ? AppFonts.tabular : null,
               ),
             ),
           ),

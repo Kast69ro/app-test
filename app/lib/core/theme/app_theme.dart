@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'app_colors.dart';
+import 'app_text_styles.dart';
 
 abstract final class AppTheme {
   static ThemeData light() {
@@ -12,6 +13,7 @@ abstract final class AppTheme {
     );
     return ThemeData(
       useMaterial3: true,
+      fontFamily: AppFonts.brand,
       colorScheme: scheme,
       scaffoldBackgroundColor: AppColors.background,
       splashFactory: NoSplash.splashFactory,

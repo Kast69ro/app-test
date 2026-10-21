@@ -1,6 +1,7 @@
 import 'package:flutter/painting.dart';
 
-/// Цвета из прототипа `POS Terminal.dc.html`. В экранах — только отсюда.
+/// Цвета из прототипа `POS Terminal.dc.html`, акцент — по бренд-буку банка.
+/// В экранах — только отсюда.
 abstract final class AppColors {
   static const background = Color(0xFFF4F4F2);
   static const surface = Color(0xFFFFFFFF);
@@ -14,8 +15,9 @@ abstract final class AppColors {
   static const textSecondary = Color(0xFF6B7075);
   static const textTertiary = Color(0xFF9AA0A6);
 
-  static const accent = Color(0xFF0E8F6F);
-  static const accentPressed = Color(0xFF0B7259);
+  /// «Актив — Ориент Красный» из бренд-бука (RGB 227-30-36).
+  static const accent = Color(0xFFE31E24);
+  static const accentPressed = Color(0xFFC0171D);
 
   static const error = Color(0xFFB3352F);
   static const errorBg = Color(0xFFFDECEA);
@@ -32,7 +34,7 @@ abstract final class AppColors {
   static const disabledText = Color(0xFFA6ABB0);
 
   static const tabActiveBg = Color(0xFFFDECEC);
-  static const tabActive = Color(0xFFD6202A);
+  static const tabActive = accent;
 
   /// Блок «TJ QR | QR рамзи ягона».
   static const tjqrText = Color(0xFF4F4F4F);

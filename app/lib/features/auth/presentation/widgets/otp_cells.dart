@@ -44,7 +44,7 @@ class OtpCells extends StatelessWidget {
               textScaler: MediaQuery.textScalerOf(context)
                   .clamp(maxScaleFactor: 1.3),
               style: const TextStyle(
-                fontFamily: AppFonts.mono,
+                fontFeatures: AppFonts.tabular,
                 fontSize: 24,
                 fontWeight: FontWeight.w600,
                 color: AppColors.textPrimary,

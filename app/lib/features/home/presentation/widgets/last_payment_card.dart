@@ -72,10 +72,10 @@ class LastPaymentCard extends StatelessWidget {
                 ? '+${formatMoney(p.amount)}'
                 : formatMoney(p.amount),
             style: TextStyle(
-              fontFamily: AppFonts.mono,
+              fontFeatures: AppFonts.tabular,
               fontSize: 19,
               fontWeight: FontWeight.w600,
-              color: success ? AppColors.accent : AppColors.textSecondary,
+              color: success ? AppColors.successDot : AppColors.textSecondary,
             ),
           ),
         ],

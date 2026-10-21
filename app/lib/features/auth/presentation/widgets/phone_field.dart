@@ -44,7 +44,7 @@ class PhoneField extends StatelessWidget {
                 child: Text(
                   formatPhoneMask(digits),
                   style: const TextStyle(
-                    fontFamily: AppFonts.mono,
+                    fontFeatures: AppFonts.tabular,
                     fontSize: 18,
                     letterSpacing: 2.16,
                     color: AppColors.textPrimary,

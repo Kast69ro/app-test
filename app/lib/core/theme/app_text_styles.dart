@@ -3,14 +3,17 @@ import 'package:flutter/painting.dart';
 import 'app_colors.dart';
 
 abstract final class AppFonts {
-  /// Цифры и суммы.
-  static const mono = 'IBMPlexMono';
+  /// Фирменный шрифт банка — весь текст приложения.
+  static const brand = 'Montserrat';
+
+  /// Цифры одной ширины, чтобы суммы и коды не «прыгали».
+  static const tabular = [FontFeature.tabularFigures()];
 
   /// Блок TJ QR.
   static const lato = 'Lato';
 }
 
-/// Стили текста из прототипа. Остальное — системный шрифт.
+/// Стили текста из прототипа. Шрифт по умолчанию — [AppFonts.brand] из темы.
 abstract final class AppTextStyles {
   static const screenTitle = TextStyle(
     fontSize: 26,
@@ -56,21 +59,21 @@ abstract final class AppTextStyles {
   );
 
   static const brandSubtitle = TextStyle(
-    fontFamily: AppFonts.mono,
+    fontFeatures: AppFonts.tabular,
     fontSize: 11,
     letterSpacing: 0.66,
     color: AppColors.textTertiary,
   );
 
   static const monoCaption = TextStyle(
-    fontFamily: AppFonts.mono,
+    fontFeatures: AppFonts.tabular,
     fontSize: 13,
     color: AppColors.textSecondary,
   );
 
   /// Суммы в плитках главной.
   static const amountTile = TextStyle(
-    fontFamily: AppFonts.mono,
+    fontFeatures: AppFonts.tabular,
     fontSize: 24,
     fontWeight: FontWeight.w600,
     letterSpacing: -0.48,
@@ -79,7 +82,7 @@ abstract final class AppTextStyles {
 
   /// Сумма в строке истории.
   static const amountRow = TextStyle(
-    fontFamily: AppFonts.mono,
+    fontFeatures: AppFonts.tabular,
     fontSize: 20,
     fontWeight: FontWeight.w600,
     letterSpacing: -0.2,
@@ -88,7 +91,7 @@ abstract final class AppTextStyles {
 
   /// Сумма в шапке карточки операции.
   static const amountLarge = TextStyle(
-    fontFamily: AppFonts.mono,
+    fontFeatures: AppFonts.tabular,
     fontSize: 40,
     fontWeight: FontWeight.w600,
     letterSpacing: -0.8,

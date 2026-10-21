@@ -66,7 +66,7 @@ class InfoRow extends StatelessWidget {
                 value,
                 textAlign: TextAlign.right,
                 style: const TextStyle(
-                  fontFamily: AppFonts.mono,
+                  fontFeatures: AppFonts.tabular,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: AppColors.textPrimary,

@@ -31,7 +31,8 @@ class MainShell extends StatelessWidget {
                 Expanded(
                   child: _Tab(
                     label: l.tabHome,
-                    iconRadius: 4,
+                    icon: Icons.home_outlined,
+                    activeIcon: Icons.home_rounded,
                     active: shell.currentIndex == 0,
                     onTap: () => _go(0),
                   ),
@@ -40,7 +41,8 @@ class MainShell extends StatelessWidget {
                 Expanded(
                   child: _Tab(
                     label: l.tabHistory,
-                    iconRadius: 9,
+                    icon: Icons.history_rounded,
+                    activeIcon: Icons.history_rounded,
                     active: shell.currentIndex == 1,
                     onTap: () => _go(1),
                   ),
@@ -61,15 +63,15 @@ class MainShell extends StatelessWidget {
 class _Tab extends StatelessWidget {
   const _Tab({
     required this.label,
-    required this.iconRadius,
+    required this.icon,
+    required this.activeIcon,
     required this.active,
     required this.onTap,
   });
 
   final String label;
-
-  /// Иконка-фигура из прототипа: квадрат (4) у «Главной», круг (9) у «Истории».
-  final double iconRadius;
+  final IconData icon;
+  final IconData activeIcon;
   final bool active;
   final VoidCallback onTap;
 
@@ -94,15 +96,8 @@ class _Tab extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  width: 17,
-                  height: 17,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: fg, width: 2),
-                    borderRadius: BorderRadius.circular(iconRadius),
-                  ),
-                ),
-                const SizedBox(height: 5),
+                Icon(active ? activeIcon : icon, size: 22, color: fg),
+                const SizedBox(height: 4),
                 Text(
                   label,
                   textScaler: MediaQuery.textScalerOf(context)
