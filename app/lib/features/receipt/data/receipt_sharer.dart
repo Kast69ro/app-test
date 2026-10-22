@@ -8,7 +8,7 @@ import 'package:share_plus/share_plus.dart';
 
 part 'receipt_sharer.g.dart';
 
-/// Отдаёт PNG чека в системное окно «Поделиться».
+/// Отдаёт PDF чека в системное окно «Поделиться».
 ///
 /// Файл пишем в свою папку и чистим её перед каждым чеком: в кеше
 /// не копятся старые чеки с данными платежей. Удалить файл сразу после
@@ -23,21 +23,25 @@ class ReceiptSharer {
 
   /// [fileName] без расширения. [origin] — откуда открыть окно на iPad.
   Future<void> share(
-    Uint8List png, {
+    Uint8List pdf, {
     required String fileName,
     Rect? origin,
   }) async {
     final XFile file;
     if (kIsWeb) {
       // Только предпросмотр вёрстки — файловой системы нет.
-      file = XFile.fromData(png, mimeType: 'image/png', name: '$fileName.png');
+      file = XFile.fromData(
+        pdf,
+        mimeType: 'application/pdf',
+        name: '$fileName.pdf',
+      );
     } else {
       final dir = Directory('${(await _tempDir()).path}/receipts');
       if (await dir.exists()) await dir.delete(recursive: true);
       await dir.create(recursive: true);
-      final path = '${dir.path}/$fileName.png';
-      await File(path).writeAsBytes(png, flush: true);
-      file = XFile(path, mimeType: 'image/png');
+      final path = '${dir.path}/$fileName.pdf';
+      await File(path).writeAsBytes(pdf, flush: true);
+      file = XFile(path, mimeType: 'application/pdf');
     }
     await _share(ShareParams(files: [file], sharePositionOrigin: origin));
   }

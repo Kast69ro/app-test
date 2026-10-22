@@ -1,7 +1,4 @@
-import 'dart:ui' as ui;
-
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -15,7 +12,7 @@ import '../../../l10n/app_localizations.dart';
 import '../../auth/presentation/session_controller.dart';
 import '../../receipt/data/receipt_sharer.dart';
 import '../../receipt/domain/receipt.dart';
-import '../../receipt/presentation/receipt_view.dart';
+import '../../receipt/presentation/receipt_pdf.dart';
 import '../domain/payment.dart';
 import 'payment_status_style.dart';
 import 'widgets/payment_actions.dart';
@@ -36,20 +33,15 @@ class PaymentScreen extends ConsumerStatefulWidget {
 enum _Share { idle, busy, failed }
 
 class _PaymentScreenState extends ConsumerState<PaymentScreen> {
-  final _receiptKey = GlobalKey();
   final _shareKey = GlobalKey();
   var _share = _Share.idle;
 
-  Future<void> _shareReceipt() async {
+  Future<void> _shareReceipt(Receipt receipt) async {
     setState(() => _share = _Share.busy);
     try {
-      final boundary =
-          _receiptKey.currentContext!.findRenderObject()!
-              as RenderRepaintBoundary;
-      final image = await boundary.toImage(pixelRatio: 3);
-      final data = await image.toByteData(format: ui.ImageByteFormat.png);
-      image.dispose();
-      if (data == null) throw StateError('PNG не собрался');
+      final l = AppLocalizations.of(context);
+      final pdf = await ref.read(receiptPdfProvider).build(receipt, l);
+      if (!mounted) return;
 
       // iPad открывает окно «Поделиться» стрелкой от кнопки.
       final button = _shareKey.currentContext?.findRenderObject() as RenderBox?;
@@ -59,11 +51,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
 
       await ref
           .read(receiptSharerProvider)
-          .share(
-            data.buffer.asUint8List(),
-            fileName: _fileName(widget.payment),
-            origin: origin,
-          );
+          .share(pdf, fileName: _fileName(widget.payment), origin: origin);
       if (mounted) setState(() => _share = _Share.idle);
     } catch (_) {
       if (mounted) setState(() => _share = _Share.failed);
@@ -90,88 +78,56 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: Stack(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Чек для картинки лежит под экраном: он отрисован (иначе снимок
-          // не сделать), но закрыт непрозрачной карточкой и скрыт от TalkBack.
-          if (p.status == PaymentStatus.success)
-            Positioned(
-              left: 0,
-              top: 0,
-              child: ExcludeSemantics(
-                child: RepaintBoundary(
-                  key: _receiptKey,
-                  child: ReceiptView(receipt: receipt),
-                ),
-              ),
-            ),
-          Positioned.fill(
-            child: ColoredBox(
-              color: AppColors.background,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _Header(
-                    backLabel: l.back,
-                    onBack: () => context.pop(),
-                    status: status,
-                    amount: formatMoney(p.amount),
-                  ),
-                  Expanded(
-                    child: ListView(
-                      padding: const EdgeInsets.all(16),
-                      children: [
-                        InfoCard(
-                          children: [
-                            InfoRow(
-                              l.paymentDate,
-                              at == null ? '—' : formatDayMonth(at),
-                            ),
-                            InfoRow(
-                              l.paymentTime,
-                              at == null ? '—' : formatTime(at),
-                            ),
-                            InfoRow(l.paymentBank, p.sender),
-                            // Как в прототипе: ID терминала, иначе название.
-                            InfoRow(
-                              l.settingsTerminal,
-                              orDash(
-                                terminalId.isNotEmpty
-                                    ? terminalId
-                                    : terminalName,
-                              ),
-                            ),
-                            InfoRow(
-                              l.settingsStore,
-                              orDash(session?.storeName ?? ''),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                        PaymentTrail(payment: p),
-                      ],
+          _Header(
+            backLabel: l.back,
+            onBack: () => context.pop(),
+            status: status,
+            amount: formatMoney(p.amount),
+          ),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                InfoCard(
+                  children: [
+                    InfoRow(
+                      l.paymentDate,
+                      at == null ? '—' : formatDayMonth(at),
                     ),
-                  ),
-                  _Actions(
-                    children: [
-                      RefundButton(label: l.paymentRefund),
-                      if (p.status == PaymentStatus.success)
-                        ShareReceiptButton(
-                          key: _shareKey,
-                          label: switch (_share) {
-                            _Share.idle => l.paymentShare,
-                            _Share.busy => l.paymentSharing,
-                            _Share.failed => l.paymentShareError,
-                          },
-                          busy: _share == _Share.busy,
-                          failed: _share == _Share.failed,
-                          onTap: _shareReceipt,
-                        ),
-                    ],
-                  ),
-                ],
-              ),
+                    InfoRow(l.paymentTime, at == null ? '—' : formatTime(at)),
+                    InfoRow(l.paymentBank, p.sender),
+                    // Как в прототипе: ID терминала, иначе название.
+                    InfoRow(
+                      l.settingsTerminal,
+                      orDash(terminalId.isNotEmpty ? terminalId : terminalName),
+                    ),
+                    InfoRow(l.settingsStore, orDash(session?.storeName ?? '')),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                PaymentTrail(payment: p),
+              ],
             ),
+          ),
+          _Actions(
+            children: [
+              RefundButton(label: l.paymentRefund),
+              if (p.status == PaymentStatus.success)
+                ShareReceiptButton(
+                  key: _shareKey,
+                  label: switch (_share) {
+                    _Share.idle => l.paymentShare,
+                    _Share.busy => l.paymentSharing,
+                    _Share.failed => l.paymentShareError,
+                  },
+                  busy: _share == _Share.busy,
+                  failed: _share == _Share.failed,
+                  onTap: () => _shareReceipt(receipt),
+                ),
+            ],
           ),
         ],
       ),

@@ -22,14 +22,14 @@ void main() {
 
   tearDown(() => temp.delete(recursive: true));
 
-  test('PNG пишется в папку receipts и уходит в «Поделиться»', () async {
-    final png = Uint8List.fromList([137, 80, 78, 71]);
-    await sharer.share(png, fileName: 'receipt_2026-09-08_1412');
+  test('PDF пишется в папку receipts и уходит в «Поделиться»', () async {
+    final pdf = Uint8List.fromList('%PDF-'.codeUnits);
+    await sharer.share(pdf, fileName: 'receipt_2026-09-08_1412');
 
     final file = shared.single.files!.single;
-    expect(file.path, endsWith('receipts/receipt_2026-09-08_1412.png'));
-    expect(file.mimeType, 'image/png');
-    expect(await File(file.path).readAsBytes(), png);
+    expect(file.path, endsWith('receipts/receipt_2026-09-08_1412.pdf'));
+    expect(file.mimeType, 'application/pdf');
+    expect(await File(file.path).readAsBytes(), pdf);
   });
 
   test('старые чеки удаляются перед новым', () async {
@@ -39,6 +39,6 @@ void main() {
     final names = Directory('${temp.path}/receipts')
         .listSync()
         .map((f) => f.uri.pathSegments.last);
-    expect(names, ['new.png']);
+    expect(names, ['new.pdf']);
   });
 }

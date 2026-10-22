@@ -12,13 +12,13 @@ import '../history/history_widget_test.dart' show openHistory, payment;
 
 /// Вместо системного окна запоминает, какой чек отдали.
 class FakeSharer implements ReceiptSharer {
-  final shared = <({Uint8List png, String fileName})>[];
+  final shared = <({Uint8List pdf, String fileName})>[];
   bool fails = false;
 
   @override
-  Future<void> share(Uint8List png, {required String fileName, Rect? origin}) {
+  Future<void> share(Uint8List pdf, {required String fileName, Rect? origin}) {
     if (fails) return Future.error(Exception('нет приложения'));
-    shared.add((png: png, fileName: fileName));
+    shared.add((pdf: pdf, fileName: fileName));
     return Future.value();
   }
 }
@@ -53,7 +53,6 @@ void main() {
 
     expect(find.byType(PaymentScreen), findsOneWidget);
     expect(find.text('История'), findsNothing); // без нижней панели
-    // hitTestable — только видимое: копия суммы есть и в скрытом чеке.
     expect(find.text('1 234,50').hitTestable(), findsOneWidget);
     expect(find.text('08.09').hitTestable(), findsOneWidget);
     expect(find.text('Душанбе Сити Банк').hitTestable(), findsOneWidget);
@@ -92,7 +91,7 @@ void main() {
     expect(find.text('Поделиться чеком'), findsNothing);
   });
 
-  testWidgets('«Поделиться чеком» отдаёт PNG', (tester) async {
+  testWidgets('«Поделиться чеком» отдаёт PDF', (tester) async {
     final sharer = await openPayment(
       tester,
       payment(150, at),
@@ -100,7 +99,7 @@ void main() {
     );
 
     await tester.tap(find.text('Поделиться чеком'));
-    // Снимок картинки идёт вне тестовых часов — даём ему настоящее время.
+    // Шрифты и PDF собираются вне тестовых часов — даём настоящее время.
     await tester.runAsync(() async {
       for (var i = 0; i < 50 && sharer.shared.isEmpty; i++) {
         await Future<void>.delayed(const Duration(milliseconds: 20));
@@ -110,8 +109,7 @@ void main() {
 
     final shot = sharer.shared.single;
     expect(shot.fileName, 'receipt_2026-09-08_1412');
-    // Сигнатура PNG.
-    expect(shot.png.sublist(0, 4), [137, 80, 78, 71]);
+    expect(String.fromCharCodes(shot.pdf.sublist(0, 5)), '%PDF-');
     expect(find.text('Поделиться чеком'), findsOneWidget);
   });
 

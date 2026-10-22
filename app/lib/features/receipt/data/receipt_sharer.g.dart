@@ -48,4 +48,4 @@ final class ReceiptSharerProvider
   }
 }
 
-String _$receiptSharerHash() => r'22c9bfaa0d397129e5e3cf7c53156e0c13f99c20';
+String _$receiptSharerHash() => r'90df75e4b6262d899456b4cdb568350e6ff0001b';
