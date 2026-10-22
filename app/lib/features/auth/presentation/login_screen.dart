@@ -51,7 +51,7 @@ class LoginScreen extends ConsumerWidget {
         if (!didPop) c.backToPhone();
       },
       child: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: context.colors.background,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(
@@ -75,7 +75,12 @@ class LoginScreen extends ConsumerWidget {
                         if (isPhone) ...[
                           Text(l.loginTitle, style: AppTextStyles.screenTitle),
                           const SizedBox(height: 8),
-                          Text(l.loginSubtitle, style: AppTextStyles.body),
+                          Text(
+                            l.loginSubtitle,
+                            style: AppTextStyles.body.copyWith(
+                              color: context.colors.textSecondary,
+                            ),
+                          ),
                           const SizedBox(height: 20),
                           PhoneField(digits: s.phone, label: l.loginPhoneLabel),
                         ] else
@@ -127,7 +132,10 @@ class _CodeStep extends StatelessWidget {
             formatPhoneHidden(state.phone),
             (state.codeExpiresIn / 60).round(),
           ),
-          style: AppTextStyles.caption.copyWith(height: 1.45),
+          style: AppTextStyles.caption.copyWith(
+            color: context.colors.textSecondary,
+            height: 1.45,
+          ),
         ),
         const SizedBox(height: 10),
         OtpCells(
@@ -144,14 +152,16 @@ class _CodeStep extends StatelessWidget {
           children: [
             _LinkButton(
               label: l.loginChangePhone,
-              color: AppColors.accent,
+              color: context.colors.accent,
               onTap: state.loading ? null : controller.backToPhone,
             ),
             _LinkButton(
               label: state.resendIn > 0
                   ? l.loginResendIn(state.resendIn)
                   : l.loginResend,
-              color: canResend ? AppColors.accent : AppColors.textTertiary,
+              color: canResend
+                  ? context.colors.accent
+                  : context.colors.textTertiary,
               mono: true,
               onTap: canResend ? controller.resend : null,
             ),

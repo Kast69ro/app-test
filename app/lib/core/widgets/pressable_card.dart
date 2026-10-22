@@ -10,8 +10,8 @@ class PressableCard extends StatelessWidget {
     required this.radius,
     required this.padding,
     this.onTap,
-    this.pressedColor = AppColors.surfacePressed,
-    this.borderColor = AppColors.border,
+    this.pressedColor,
+    this.borderColor,
     this.semanticLabel,
   });
 
@@ -19,26 +19,28 @@ class PressableCard extends StatelessWidget {
   final double radius;
   final EdgeInsetsGeometry padding;
   final VoidCallback? onTap;
-  final Color pressedColor;
-  final Color borderColor;
+
+  /// По умолчанию — `surfacePressed` и `border` из темы.
+  final Color? pressedColor;
+  final Color? borderColor;
   final String? semanticLabel;
 
   @override
   Widget build(BuildContext context) {
     final shape = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(radius),
-      side: BorderSide(color: borderColor),
+      side: BorderSide(color: borderColor ?? context.colors.border),
     );
     return Semantics(
       button: onTap != null,
       label: semanticLabel,
       child: Material(
-        color: AppColors.surface,
+        color: context.colors.surface,
         shape: shape,
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: onTap,
-          highlightColor: pressedColor,
+          highlightColor: pressedColor ?? context.colors.surfacePressed,
           child: Padding(padding: padding, child: child),
         ),
       ),

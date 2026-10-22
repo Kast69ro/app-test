@@ -38,7 +38,7 @@ class PinEntryView extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.colors.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(
@@ -60,7 +60,12 @@ class PinEntryView extends StatelessWidget {
                       const SizedBox(height: 22),
                       Text(title, style: AppTextStyles.screenTitle),
                       const SizedBox(height: 8),
-                      Text(subtitle, style: AppTextStyles.body),
+                      Text(
+                        subtitle,
+                        style: AppTextStyles.body.copyWith(
+                          color: context.colors.textSecondary,
+                        ),
+                      ),
                       const SizedBox(height: 22),
                       _PinDots(
                         filled: filled,
@@ -110,17 +115,17 @@ class _PinDots extends StatelessWidget {
     for (var i = 0; i < pinLength; i++) {
       if (i > 0) dots.add(const SizedBox(width: 14));
       final border = hasError
-          ? AppColors.errorBorder
+          ? context.colors.errorBorder
           : i == filled
-          ? AppColors.accent
-          : AppColors.cellIdle;
+          ? context.colors.accent
+          : context.colors.cellIdle;
       dots.add(
         Container(
           width: 18,
           height: 18,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: i < filled ? AppColors.textPrimary : Colors.transparent,
+            color: i < filled ? context.colors.textPrimary : Colors.transparent,
             border: Border.all(color: border, width: 1.5),
           ),
         ),

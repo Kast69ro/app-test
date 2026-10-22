@@ -2,6 +2,7 @@ import 'package:activbank_qr/app/app.dart';
 import 'package:activbank_qr/app/bootstrap.dart';
 import 'package:activbank_qr/core/api/api_providers.dart';
 import 'package:activbank_qr/core/security/pin_hasher.dart';
+import 'package:activbank_qr/core/storage/preferences.dart';
 import 'package:activbank_qr/core/storage/secure_store.dart';
 import 'package:activbank_qr/features/pin/data/pin_repository.dart';
 import 'package:dio/dio.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'fake_http.dart';
 
@@ -81,6 +83,8 @@ class FakeBackend {
 
 /// Приложение с памятью вместо хранилища и ненастоящим бэком.
 /// По умолчанию — маленький экран (320×568) и шрифт 1,3×.
+/// [prefs] — обычные настройки (тема); `null` — оставить прежние,
+/// чтобы повторный вызов имитировал перезапуск приложения.
 Future<MemorySecureStore> pumpTestApp(
   WidgetTester tester,
   FakeBackend backend, {
@@ -88,7 +92,10 @@ Future<MemorySecureStore> pumpTestApp(
   Size size = const Size(320, 568),
   double textScale = 1.3,
   List<Override> overrides = const [],
+  Map<String, Object>? prefs = const {},
 }) async {
+  if (prefs != null) SharedPreferences.setMockInitialValues(prefs);
+  final sharedPrefs = await SharedPreferences.getInstance();
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
   tester.platformDispatcher.textScaleFactorTestValue = textScale;
@@ -103,6 +110,7 @@ Future<MemorySecureStore> pumpTestApp(
       retry: noRetry,
       overrides: [
         secureStoreProvider.overrideWithValue(mem),
+        preferencesProvider.overrideWithValue(sharedPrefs),
         pinRepositoryProvider.overrideWithValue(
           PinRepository(mem, hasher: const PinHasher(iterations: 10)),
         ),

@@ -23,9 +23,9 @@ class PhoneField extends StatelessWidget {
         constraints: const BoxConstraints(minHeight: 60),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: context.colors.surface,
           border: Border.all(
-            color: ready ? AppColors.accent : AppColors.borderList,
+            color: ready ? context.colors.accent : context.colors.borderList,
             width: 1.5,
           ),
           borderRadius: BorderRadius.circular(AppDimens.radiusField),
@@ -34,7 +34,10 @@ class PhoneField extends StatelessWidget {
           children: [
             Text(
               phoneCountryCode,
-              style: AppTextStyles.monoCaption.copyWith(fontSize: 18),
+              style: AppTextStyles.monoCaption.copyWith(
+                color: context.colors.textSecondary,
+                fontSize: 18,
+              ),
             ),
             const SizedBox(width: 12),
             Flexible(
@@ -43,11 +46,11 @@ class PhoneField extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   formatPhoneMask(digits),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFeatures: AppFonts.tabular,
                     fontSize: 18,
                     letterSpacing: 2.16,
-                    color: AppColors.textPrimary,
+                    color: context.colors.textPrimary,
                   ),
                 ),
               ),

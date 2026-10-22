@@ -12,8 +12,10 @@ import '../../../core/widgets/info_card.dart';
 import '../../../core/widgets/text_link.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../auth/presentation/session_controller.dart';
+import 'theme_mode_controller.dart';
+import 'widgets/theme_selector.dart';
 
-/// Настройки: данные точки, смена кода, выход.
+/// Настройки: данные точки, тема, смена кода, выход.
 /// Открываются тапом по логотипу на главной.
 /// TODO: политика конфиденциальности и версия — ждут согласования пакетов.
 class SettingsScreen extends ConsumerWidget {
@@ -26,7 +28,7 @@ class SettingsScreen extends ConsumerWidget {
     String orDash(String? v) => (v == null || v.isEmpty) ? '—' : v;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.colors.background,
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(
@@ -57,6 +59,11 @@ class SettingsScreen extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 12),
+            ThemeSelector(
+              value: ref.watch(themeModeControllerProvider),
+              onChanged: ref.read(themeModeControllerProvider.notifier).select,
+            ),
+            const SizedBox(height: 12),
             _ActionRow(
               label: l.settingsChangePin,
               onTap: () => context.push(Routes.changePin),
@@ -64,7 +71,7 @@ class SettingsScreen extends ConsumerWidget {
             const SizedBox(height: 12),
             _ActionRow(
               label: l.logout,
-              color: AppColors.error,
+              color: context.colors.error,
               showChevron: false,
               onTap: () async {
                 if (await confirmLogout(context)) {
@@ -83,30 +90,32 @@ class _ActionRow extends StatelessWidget {
   const _ActionRow({
     required this.label,
     required this.onTap,
-    this.color = AppColors.textPrimary,
+    this.color,
     this.showChevron = true,
   });
 
   final String label;
   final VoidCallback onTap;
-  final Color color;
+
+  /// По умолчанию — `textPrimary` из темы.
+  final Color? color;
   final bool showChevron;
 
   @override
   Widget build(BuildContext context) {
     final shape = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(AppDimens.radiusRow),
-      side: const BorderSide(color: AppColors.borderList),
+      side: BorderSide(color: context.colors.borderList),
     );
     return Semantics(
       button: true,
       child: Material(
-        color: AppColors.surface,
+        color: context.colors.surface,
         shape: shape,
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: onTap,
-          highlightColor: AppColors.disabledBg,
+          highlightColor: context.colors.disabledBg,
           child: ConstrainedBox(
             constraints: const BoxConstraints(minHeight: 52),
             child: Padding(
@@ -116,16 +125,19 @@ class _ActionRow extends StatelessWidget {
                   Expanded(
                     child: Text(
                       label,
-                      style: TextStyle(fontSize: 16, color: color),
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: color ?? context.colors.textPrimary,
+                      ),
                     ),
                   ),
                   if (showChevron)
-                    const ExcludeSemantics(
+                    ExcludeSemantics(
                       child: Text(
                         '›',
                         style: TextStyle(
                           fontSize: 20,
-                          color: AppColors.textTertiary,
+                          color: context.colors.textTertiary,
                         ),
                       ),
                     ),

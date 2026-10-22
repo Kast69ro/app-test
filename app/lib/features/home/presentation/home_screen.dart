@@ -52,7 +52,7 @@ class HomeScreen extends ConsumerWidget {
     final refunded = summary?.refunded;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.colors.background,
       body: SafeArea(
         bottom: false,
         child: RefreshIndicator(
@@ -116,7 +116,7 @@ class HomeScreen extends ConsumerWidget {
                         count: refunded == null
                             ? '—'
                             : paymentsCount(refunded.count),
-                        amountColor: AppColors.error,
+                        amountColor: context.colors.error,
                       ),
                     ),
                   ],
@@ -169,14 +169,21 @@ class _Header extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 textBaseline: TextBaseline.alphabetic,
                 children: [
-                  Text('ID $terminalId', style: AppTextStyles.monoCaption),
+                  Text(
+                    'ID $terminalId',
+                    style: AppTextStyles.monoCaption.copyWith(
+                      color: context.colors.textSecondary,
+                    ),
+                  ),
                   const SizedBox(width: 8),
                   Flexible(
                     child: Text(
                       merchant,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: AppTextStyles.caption,
+                      style: AppTextStyles.caption.copyWith(
+                        color: context.colors.textSecondary,
+                      ),
                     ),
                   ),
                 ],

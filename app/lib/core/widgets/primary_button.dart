@@ -22,11 +22,11 @@ class PrimaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final active = onPressed != null || loading;
     final bg = loading
-        ? AppColors.buttonLoading
+        ? context.colors.buttonLoading
         : active
-        ? AppColors.buttonDark
-        : AppColors.buttonDisabled;
-    final fg = active ? AppColors.surface : AppColors.textTertiary;
+        ? context.colors.buttonPrimary
+        : context.colors.buttonDisabled;
+    final fg = active ? context.colors.surface : context.colors.textTertiary;
 
     return Semantics(
       button: true,

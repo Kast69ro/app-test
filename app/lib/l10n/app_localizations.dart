@@ -580,6 +580,30 @@ abstract class AppLocalizations {
   /// **'Сменить код входа'**
   String get settingsChangePin;
 
+  /// No description provided for @settingsTheme.
+  ///
+  /// In ru, this message translates to:
+  /// **'Тема'**
+  String get settingsTheme;
+
+  /// No description provided for @themeSystem.
+  ///
+  /// In ru, this message translates to:
+  /// **'Системная'**
+  String get themeSystem;
+
+  /// No description provided for @themeLight.
+  ///
+  /// In ru, this message translates to:
+  /// **'Светлая'**
+  String get themeLight;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In ru, this message translates to:
+  /// **'Тёмная'**
+  String get themeDark;
+
   /// No description provided for @pinTitleCurrent.
   ///
   /// In ru, this message translates to:

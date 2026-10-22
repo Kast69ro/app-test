@@ -25,7 +25,7 @@ class HistoryRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final p = payment;
-    final status = PaymentStatusStyle.of(p.status, l);
+    final status = PaymentStatusStyle.of(p.status, l, context.colors);
     final success = p.status == PaymentStatus.success;
     final time = p.createdAt == null ? '' : formatTime(p.createdAt!);
 
@@ -33,7 +33,7 @@ class HistoryRow extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(AppDimens.radiusRow),
         child: ColoredBox(
-          color: AppColors.borderList,
+          color: context.colors.borderList,
           child: IntrinsicHeight(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -47,17 +47,17 @@ class HistoryRow extends StatelessWidget {
                         right: Radius.circular(AppDimens.radiusRow - 1),
                       ),
                       child: Material(
-                        color: AppColors.surface,
+                        color: context.colors.surface,
                         child: InkWell(
                           onTap: onTap,
-                          highlightColor: AppColors.surfacePressed,
+                          highlightColor: context.colors.surfacePressed,
                           child: Padding(
                             padding: const EdgeInsets.all(14),
                             child: _Content(
                               amount: formatMoney(p.amount),
                               amountColor: success
-                                  ? AppColors.textPrimary
-                                  : AppColors.textSecondary,
+                                  ? context.colors.textPrimary
+                                  : context.colors.textSecondary,
                               status: status,
                               sender: p.sender,
                               time: time,
@@ -121,11 +121,18 @@ class _Content extends StatelessWidget {
                 sender,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.monoCaption,
+                style: AppTextStyles.monoCaption.copyWith(
+                  color: context.colors.textSecondary,
+                ),
               ),
             ),
             const SizedBox(width: 12),
-            Text(time, style: AppTextStyles.monoCaption),
+            Text(
+              time,
+              style: AppTextStyles.monoCaption.copyWith(
+                color: context.colors.textSecondary,
+              ),
+            ),
           ],
         ),
       ],

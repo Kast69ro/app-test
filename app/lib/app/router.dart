@@ -61,7 +61,7 @@ GoRouter router(Ref ref) {
       GoRoute(
         path: Routes.splash,
         builder: (context, state) =>
-            const Scaffold(backgroundColor: AppColors.background),
+            Scaffold(backgroundColor: context.colors.background),
       ),
       GoRoute(
         path: Routes.login,

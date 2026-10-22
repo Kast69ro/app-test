@@ -14,12 +14,12 @@ class MainShell extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.colors.background,
       body: shell,
       bottomNavigationBar: DecoratedBox(
-        decoration: const BoxDecoration(
-          color: AppColors.surface,
-          border: Border(top: BorderSide(color: AppColors.border)),
+        decoration: BoxDecoration(
+          color: context.colors.surface,
+          border: Border(top: BorderSide(color: context.colors.border)),
         ),
         child: SafeArea(
           top: false,
@@ -77,14 +77,14 @@ class _Tab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fg = active ? AppColors.tabActive : AppColors.textTertiary;
+    final fg = active ? context.colors.accent : context.colors.textTertiary;
     return Semantics(
       button: true,
       selected: active,
       label: label,
       excludeSemantics: true,
       child: Material(
-        color: active ? AppColors.tabActiveBg : Colors.transparent,
+        color: active ? context.colors.tabActiveBg : Colors.transparent,
         borderRadius: BorderRadius.circular(16),
         child: InkWell(
           borderRadius: BorderRadius.circular(16),

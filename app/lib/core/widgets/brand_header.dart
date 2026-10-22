@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_colors.dart';
 import '../theme/app_dimens.dart';
 import '../theme/app_text_styles.dart';
 
@@ -22,20 +23,22 @@ class BrandHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 10),
-        const Flexible(
+        Flexible(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Activ QR',
                 style: AppTextStyles.brandName,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              SizedBox(height: 2),
+              const SizedBox(height: 2),
               Text(
                 'кабинет мерчанта',
-                style: AppTextStyles.brandSubtitle,
+                style: AppTextStyles.brandSubtitle.copyWith(
+                  color: context.colors.textTertiary,
+                ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),

@@ -1,59 +1,247 @@
-import 'package:flutter/painting.dart';
+import 'package:flutter/material.dart';
 
-/// Цвета из прототипа `POS Terminal.dc.html`, акцент — по бренд-буку банка.
-/// В экранах — только отсюда.
-abstract final class AppColors {
-  static const background = Color(0xFFF4F4F2);
-  static const surface = Color(0xFFFFFFFF);
-  static const surfacePressed = Color(0xFFFAFAF8);
-  static const border = Color(0xFFE7E7E2);
+/// Цвета приложения — светлая и тёмная палитра.
+/// Светлая — из прототипа `POS Terminal.dc.html`, акцент — по бренд-буку банка.
+/// В экранах — только отсюда: `context.colors.surface`.
+///
+/// `ThemeExtension` — способ Flutter положить свои поля в `ThemeData`:
+/// при смене темы виджеты сами перерисуются с новыми цветами.
+@immutable
+class AppColors extends ThemeExtension<AppColors> {
+  const AppColors({
+    required this.background,
+    required this.surface,
+    required this.surfacePressed,
+    required this.border,
+    required this.borderList,
+    required this.textPrimary,
+    required this.textSecondary,
+    required this.textTertiary,
+    required this.accent,
+    required this.error,
+    required this.errorBg,
+    required this.errorBorder,
+    required this.key,
+    required this.keyPressed,
+    required this.cellIdle,
+    required this.buttonPrimary,
+    required this.buttonPrimaryText,
+    required this.buttonLoading,
+    required this.buttonDisabled,
+    required this.disabledBg,
+    required this.disabledText,
+    required this.tabActiveBg,
+    required this.segmentSelected,
+    required this.successBg,
+    required this.successFg,
+    required this.successDot,
+    required this.cancelBg,
+    required this.cancelFg,
+    required this.cancelDot,
+    required this.pendingBg,
+    required this.pendingFg,
+    required this.pendingDot,
+    required this.refundBg,
+    required this.refundFg,
+    required this.refundDot,
+    required this.unknownBg,
+    required this.unknownFg,
+    required this.unknownDot,
+  });
+
+  final Color background;
+  final Color surface;
+  final Color surfacePressed;
+  final Color border;
 
   /// Бордер строк истории и карточки операции.
-  static const borderList = Color(0xFFE2E2DE);
+  final Color borderList;
 
-  static const textPrimary = Color(0xFF16181A);
-  static const textSecondary = Color(0xFF6B7075);
-  static const textTertiary = Color(0xFF9AA0A6);
+  final Color textPrimary;
+  final Color textSecondary;
+  final Color textTertiary;
 
   /// «Актив — Ориент Красный» из бренд-бука (RGB 227-30-36).
-  static const accent = Color(0xFFE31E24);
-  static const accentPressed = Color(0xFFC0171D);
+  final Color accent;
 
-  static const error = Color(0xFFB3352F);
-  static const errorBg = Color(0xFFFDECEA);
-  static const errorBorder = Color(0xFFE3A9A5);
+  final Color error;
+  final Color errorBg;
+  final Color errorBorder;
 
-  static const key = Color(0xFFEAEAE5);
-  static const keyPressed = Color(0xFFE4E4DF);
-  static const cellIdle = Color(0xFFD7D7D2);
+  final Color key;
+  final Color keyPressed;
+  final Color cellIdle;
 
-  static const buttonDark = Color(0xFF16181A);
-  static const buttonLoading = Color(0xFF2E3237);
-  static const buttonDisabled = Color(0xFFE2E2DE);
-  static const disabledBg = Color(0xFFF0F0EC);
-  static const disabledText = Color(0xFFA6ABB0);
+  /// Основная кнопка: тёмная в светлой теме, светлая — в тёмной.
+  final Color buttonPrimary;
+  final Color buttonPrimaryText;
+  final Color buttonLoading;
+  final Color buttonDisabled;
+  final Color disabledBg;
+  final Color disabledText;
 
-  static const tabActiveBg = Color(0xFFFDECEC);
-  static const tabActive = accent;
+  final Color tabActiveBg;
 
-  /// Блок «TJ QR | QR рамзи ягона».
+  /// Выбранный сегмент переключателя (тема в настройках) поверх [key].
+  final Color segmentSelected;
+
+  // Статусы операций: фон чипа / текст / точка и полоса слева.
+  final Color successBg;
+  final Color successFg;
+  final Color successDot;
+  final Color cancelBg;
+  final Color cancelFg;
+  final Color cancelDot;
+  final Color pendingBg;
+  final Color pendingFg;
+  final Color pendingDot;
+  final Color refundBg;
+  final Color refundFg;
+  final Color refundDot;
+  final Color unknownBg;
+  final Color unknownFg;
+  final Color unknownDot;
+
+  /// Блок «TJ QR | QR рамзи ягона». Он всегда на белом — в обеих темах.
   static const tjqrText = Color(0xFF4F4F4F);
   static const qrBackdrop = Color(0x29898383);
 
-  // Статусы операций: фон чипа / текст / точка и полоса слева.
-  static const successBg = Color(0xFFE8F5F0);
-  static const successFg = Color(0xFF0B7259);
-  static const successDot = Color(0xFF0E8F6F);
-  static const cancelBg = Color(0xFFFDECEA);
-  static const cancelFg = Color(0xFFB3352F);
-  static const cancelDot = Color(0xFFC9403A);
-  static const pendingBg = Color(0xFFFFF6E5);
-  static const pendingFg = Color(0xFF8A5A00);
-  static const pendingDot = Color(0xFFD89A1F);
-  static const refundBg = Color(0xFFEEF1FB);
-  static const refundFg = Color(0xFF3B4E8F);
-  static const refundDot = Color(0xFF5A6FB5);
-  static const unknownBg = Color(0xFFF0F0EC);
-  static const unknownFg = Color(0xFF6B7075);
-  static const unknownDot = Color(0xFF9AA0A6);
+  static const light = AppColors(
+    background: Color(0xFFF4F4F2),
+    surface: Color(0xFFFFFFFF),
+    surfacePressed: Color(0xFFFAFAF8),
+    border: Color(0xFFE7E7E2),
+    borderList: Color(0xFFE2E2DE),
+    textPrimary: Color(0xFF16181A),
+    textSecondary: Color(0xFF6B7075),
+    textTertiary: Color(0xFF9AA0A6),
+    accent: Color(0xFFE31E24),
+    error: Color(0xFFB3352F),
+    errorBg: Color(0xFFFDECEA),
+    errorBorder: Color(0xFFE3A9A5),
+    key: Color(0xFFEAEAE5),
+    keyPressed: Color(0xFFE4E4DF),
+    cellIdle: Color(0xFFD7D7D2),
+    buttonPrimary: Color(0xFF16181A),
+    buttonPrimaryText: Color(0xFFFFFFFF),
+    buttonLoading: Color(0xFF2E3237),
+    buttonDisabled: Color(0xFFE2E2DE),
+    disabledBg: Color(0xFFF0F0EC),
+    disabledText: Color(0xFFA6ABB0),
+    tabActiveBg: Color(0xFFFDECEC),
+    segmentSelected: Color(0xFFFFFFFF),
+    successBg: Color(0xFFE8F5F0),
+    successFg: Color(0xFF0B7259),
+    successDot: Color(0xFF0E8F6F),
+    cancelBg: Color(0xFFFDECEA),
+    cancelFg: Color(0xFFB3352F),
+    cancelDot: Color(0xFFC9403A),
+    pendingBg: Color(0xFFFFF6E5),
+    pendingFg: Color(0xFF8A5A00),
+    pendingDot: Color(0xFFD89A1F),
+    refundBg: Color(0xFFEEF1FB),
+    refundFg: Color(0xFF3B4E8F),
+    refundDot: Color(0xFF5A6FB5),
+    unknownBg: Color(0xFFF0F0EC),
+    unknownFg: Color(0xFF6B7075),
+    unknownDot: Color(0xFF9AA0A6),
+  );
+
+  /// Тёмная: тёплые серые в тон светлому фону, акцент тот же.
+  /// Цвета статусов светлее, чтобы читались на тёмном (контраст ≥ 4,5:1).
+  static const dark = AppColors(
+    background: Color(0xFF121314),
+    surface: Color(0xFF1C1D1F),
+    surfacePressed: Color(0xFF242527),
+    border: Color(0xFF2B2C2F),
+    borderList: Color(0xFF2E2F32),
+    textPrimary: Color(0xFFF2F2EF),
+    textSecondary: Color(0xFFA4A9AE),
+    textTertiary: Color(0xFF7C8186),
+    accent: Color(0xFFE31E24),
+    error: Color(0xFFF2766E),
+    errorBg: Color(0xFF3A1F1E),
+    errorBorder: Color(0xFF8A3F3A),
+    key: Color(0xFF26272A),
+    keyPressed: Color(0xFF303135),
+    cellIdle: Color(0xFF45474B),
+    buttonPrimary: Color(0xFFF2F2EF),
+    buttonPrimaryText: Color(0xFF16181A),
+    buttonLoading: Color(0xFFC9CAC6),
+    buttonDisabled: Color(0xFF2E2F32),
+    disabledBg: Color(0xFF232426),
+    disabledText: Color(0xFF63686D),
+    tabActiveBg: Color(0xFF3A1B1C),
+    segmentSelected: Color(0xFF3A3B3F),
+    successBg: Color(0xFF12322A),
+    successFg: Color(0xFF5BD3AE),
+    successDot: Color(0xFF2BB38D),
+    cancelBg: Color(0xFF3A1F1E),
+    cancelFg: Color(0xFFF2908A),
+    cancelDot: Color(0xFFE0574F),
+    pendingBg: Color(0xFF382C12),
+    pendingFg: Color(0xFFF0C25E),
+    pendingDot: Color(0xFFD89A1F),
+    refundBg: Color(0xFF1E2540),
+    refundFg: Color(0xFFA3B4EE),
+    refundDot: Color(0xFF7088D0),
+    unknownBg: Color(0xFF26272A),
+    unknownFg: Color(0xFFA4A9AE),
+    unknownDot: Color(0xFF7C8186),
+  );
+
+  @override
+  AppColors copyWith() => this;
+
+  /// Плавный переход цветов при смене темы.
+  @override
+  AppColors lerp(AppColors? other, double t) {
+    if (other == null) return this;
+    Color c(Color a, Color b) => Color.lerp(a, b, t)!;
+    return AppColors(
+      background: c(background, other.background),
+      surface: c(surface, other.surface),
+      surfacePressed: c(surfacePressed, other.surfacePressed),
+      border: c(border, other.border),
+      borderList: c(borderList, other.borderList),
+      textPrimary: c(textPrimary, other.textPrimary),
+      textSecondary: c(textSecondary, other.textSecondary),
+      textTertiary: c(textTertiary, other.textTertiary),
+      accent: c(accent, other.accent),
+      error: c(error, other.error),
+      errorBg: c(errorBg, other.errorBg),
+      errorBorder: c(errorBorder, other.errorBorder),
+      key: c(key, other.key),
+      keyPressed: c(keyPressed, other.keyPressed),
+      cellIdle: c(cellIdle, other.cellIdle),
+      buttonPrimary: c(buttonPrimary, other.buttonPrimary),
+      buttonPrimaryText: c(buttonPrimaryText, other.buttonPrimaryText),
+      buttonLoading: c(buttonLoading, other.buttonLoading),
+      buttonDisabled: c(buttonDisabled, other.buttonDisabled),
+      disabledBg: c(disabledBg, other.disabledBg),
+      disabledText: c(disabledText, other.disabledText),
+      tabActiveBg: c(tabActiveBg, other.tabActiveBg),
+      segmentSelected: c(segmentSelected, other.segmentSelected),
+      successBg: c(successBg, other.successBg),
+      successFg: c(successFg, other.successFg),
+      successDot: c(successDot, other.successDot),
+      cancelBg: c(cancelBg, other.cancelBg),
+      cancelFg: c(cancelFg, other.cancelFg),
+      cancelDot: c(cancelDot, other.cancelDot),
+      pendingBg: c(pendingBg, other.pendingBg),
+      pendingFg: c(pendingFg, other.pendingFg),
+      pendingDot: c(pendingDot, other.pendingDot),
+      refundBg: c(refundBg, other.refundBg),
+      refundFg: c(refundFg, other.refundFg),
+      refundDot: c(refundDot, other.refundDot),
+      unknownBg: c(unknownBg, other.unknownBg),
+      unknownFg: c(unknownFg, other.unknownFg),
+      unknownDot: c(unknownDot, other.unknownDot),
+    );
+  }
+}
+
+/// `context.colors.surface` — цвет из текущей темы.
+extension AppColorsContext on BuildContext {
+  AppColors get colors => Theme.of(this).extension<AppColors>()!;
 }

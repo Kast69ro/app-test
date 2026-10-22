@@ -25,6 +25,7 @@ dependencies:
   riverpod_annotation: ^4.0.7
   screen_brightness: ^2.1.11
   share_plus: ^13.3.1
+  shared_preferences: ^2.5.6
   wakelock_plus: ^1.8.1
 
 dev_dependencies:

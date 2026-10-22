@@ -270,6 +270,18 @@ class AppLocalizationsRu extends AppLocalizations {
   String get settingsChangePin => 'Сменить код входа';
 
   @override
+  String get settingsTheme => 'Тема';
+
+  @override
+  String get themeSystem => 'Системная';
+
+  @override
+  String get themeLight => 'Светлая';
+
+  @override
+  String get themeDark => 'Тёмная';
+
+  @override
   String get pinTitleCurrent => 'Текущий код';
 
   @override

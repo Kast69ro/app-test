@@ -17,15 +17,15 @@ class ErrorBox extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
-          color: AppColors.errorBg,
+          color: context.colors.errorBg,
           borderRadius: BorderRadius.circular(AppDimens.radiusRow),
         ),
         child: Text(
           text,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 14,
             height: 1.45,
-            color: AppColors.error,
+            color: context.colors.error,
           ),
         ),
       ),

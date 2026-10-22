@@ -1,31 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'app_colors.dart';
 import 'app_text_styles.dart';
 
 abstract final class AppTheme {
-  static ThemeData light() {
+  // Собираем один раз: светлая тема нужна ещё и карточке QR на каждой перерисовке.
+  static final light = _build(AppColors.light, Brightness.light);
+  static final dark = _build(AppColors.dark, Brightness.dark);
+
+  static ThemeData _build(AppColors c, Brightness brightness) {
     final scheme = ColorScheme.fromSeed(
-      seedColor: AppColors.accent,
-      primary: AppColors.accent,
-      surface: AppColors.background,
-      error: AppColors.error,
+      seedColor: c.accent,
+      brightness: brightness,
+      primary: c.accent,
+      surface: c.background,
+      onSurface: c.textPrimary,
+      error: c.error,
     );
+    final base = brightness == Brightness.dark
+        ? ThemeData.dark()
+        : ThemeData.light();
     return ThemeData(
       useMaterial3: true,
+      brightness: brightness,
       fontFamily: AppFonts.brand,
       colorScheme: scheme,
-      scaffoldBackgroundColor: AppColors.background,
+      extensions: [c],
+      scaffoldBackgroundColor: c.background,
       splashFactory: NoSplash.splashFactory,
       highlightColor: Colors.transparent,
       materialTapTargetSize: MaterialTapTargetSize.padded,
-      textTheme: ThemeData.light().textTheme.apply(
-        bodyColor: AppColors.textPrimary,
-        displayColor: AppColors.textPrimary,
+      // Цвет текста по умолчанию: стили из AppTextStyles его не задают.
+      textTheme: base.textTheme.apply(
+        bodyColor: c.textPrimary,
+        displayColor: c.textPrimary,
       ),
-      progressIndicatorTheme: const ProgressIndicatorThemeData(
-        color: AppColors.accent,
-      ),
+      progressIndicatorTheme: ProgressIndicatorThemeData(color: c.accent),
+      dialogTheme: DialogThemeData(backgroundColor: c.surface),
     );
   }
+
+  /// Значки статус-бара: тёмные на светлом фоне, светлые на тёмном.
+  static SystemUiOverlayStyle overlayFor(Brightness brightness) =>
+      brightness == Brightness.dark
+      ? SystemUiOverlayStyle.light.copyWith(statusBarColor: Colors.transparent)
+      : SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent);
 }

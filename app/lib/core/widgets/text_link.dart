@@ -9,12 +9,14 @@ class TextLink extends StatelessWidget {
     super.key,
     required this.label,
     required this.onTap,
-    this.color = AppColors.textSecondary,
+    this.color,
   });
 
   final String label;
   final VoidCallback onTap;
-  final Color color;
+
+  /// По умолчанию — `textSecondary` из темы.
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,10 @@ class TextLink extends StatelessWidget {
             child: Text(
               label,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, color: color),
+              style: TextStyle(
+                fontSize: 14,
+                color: color ?? context.colors.textSecondary,
+              ),
             ),
           ),
         ),
@@ -66,9 +71,9 @@ class BackLink extends StatelessWidget {
                   widthFactor: 1,
                   child: Text(
                     '← $label',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
-                      color: AppColors.textSecondary,
+                      color: context.colors.textSecondary,
                     ),
                   ),
                 ),

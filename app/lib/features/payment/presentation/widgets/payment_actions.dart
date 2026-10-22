@@ -19,17 +19,17 @@ class RefundButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: AppColors.disabledBg,
-          border: Border.all(color: AppColors.borderList),
+          color: context.colors.disabledBg,
+          border: Border.all(color: context.colors.borderList),
           borderRadius: BorderRadius.circular(AppDimens.radiusRow),
         ),
         child: Text(
           label,
           textAlign: TextAlign.center,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.w600,
-            color: AppColors.disabledText,
+            color: context.colors.disabledText,
           ),
         ),
       ),
@@ -56,18 +56,18 @@ class ShareReceiptButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final shape = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(AppDimens.radiusRow),
-      side: const BorderSide(color: AppColors.borderList),
+      side: BorderSide(color: context.colors.borderList),
     );
     return Semantics(
       button: true,
       enabled: !busy,
       child: Material(
-        color: busy ? AppColors.disabledBg : AppColors.surface,
+        color: busy ? context.colors.disabledBg : context.colors.surface,
         shape: shape,
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: busy ? null : onTap,
-          highlightColor: AppColors.disabledBg,
+          highlightColor: context.colors.disabledBg,
           child: ConstrainedBox(
             constraints: const BoxConstraints(minHeight: 52),
             child: Center(
@@ -78,7 +78,9 @@ class ShareReceiptButton extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
-                    color: failed ? AppColors.error : AppColors.textPrimary,
+                    color: failed
+                        ? context.colors.error
+                        : context.colors.textPrimary,
                   ),
                 ),
               ),

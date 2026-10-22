@@ -37,7 +37,7 @@ class LastPaymentCard extends StatelessWidget {
     return PressableCard(
       radius: AppDimens.radiusTile,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-      pressedColor: AppColors.background,
+      pressedColor: context.colors.background,
       onTap: onTap,
       child: Row(
         children: [
@@ -47,10 +47,10 @@ class LastPaymentCard extends StatelessWidget {
               children: [
                 Text(
                   l.homeLastPayment,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.textPrimary,
+                    color: context.colors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -58,7 +58,9 @@ class LastPaymentCard extends StatelessWidget {
                   subtitle,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.monoCaption,
+                  style: AppTextStyles.monoCaption.copyWith(
+                    color: context.colors.textSecondary,
+                  ),
                 ),
               ],
             ),
@@ -75,7 +77,9 @@ class LastPaymentCard extends StatelessWidget {
               fontFeatures: AppFonts.tabular,
               fontSize: 19,
               fontWeight: FontWeight.w600,
-              color: success ? AppColors.successDot : AppColors.textSecondary,
+              color: success
+                  ? context.colors.successDot
+                  : context.colors.textSecondary,
             ),
           ),
         ],

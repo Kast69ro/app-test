@@ -9,21 +9,23 @@ Future<bool> confirmLogout(BuildContext context) async {
   final ok = await showDialog<bool>(
     context: context,
     builder: (context) => AlertDialog(
-      backgroundColor: AppColors.surface,
+      backgroundColor: context.colors.surface,
       title: Text(l.logoutConfirmTitle),
       content: Text(
         l.logoutConfirmText,
-        style: const TextStyle(color: AppColors.textSecondary, height: 1.45),
+        style: TextStyle(color: context.colors.textSecondary, height: 1.45),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
-          style: TextButton.styleFrom(foregroundColor: AppColors.textSecondary),
+          style: TextButton.styleFrom(
+            foregroundColor: context.colors.textSecondary,
+          ),
           child: Text(l.cancel),
         ),
         TextButton(
           onPressed: () => Navigator.of(context).pop(true),
-          style: TextButton.styleFrom(foregroundColor: AppColors.error),
+          style: TextButton.styleFrom(foregroundColor: context.colors.error),
           child: Text(l.logout),
         ),
       ],

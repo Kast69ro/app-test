@@ -13,43 +13,46 @@ class PaymentStatusStyle {
   final Color fg;
   final Color dot;
 
-  factory PaymentStatusStyle.of(PaymentStatus s, AppLocalizations l) =>
-      switch (s) {
-        PaymentStatus.success => PaymentStatusStyle(
-          l.statusSuccess,
-          AppColors.successBg,
-          AppColors.successFg,
-          AppColors.successDot,
-        ),
-        PaymentStatus.cancel => PaymentStatusStyle(
-          l.statusCancel,
-          AppColors.cancelBg,
-          AppColors.cancelFg,
-          AppColors.cancelDot,
-        ),
-        PaymentStatus.pending => PaymentStatusStyle(
-          l.statusPending,
-          AppColors.pendingBg,
-          AppColors.pendingFg,
-          AppColors.pendingDot,
-        ),
-        PaymentStatus.refunded => PaymentStatusStyle(
-          l.statusRefunded,
-          AppColors.refundBg,
-          AppColors.refundFg,
-          AppColors.refundDot,
-        ),
-        PaymentStatus.refundPending => PaymentStatusStyle(
-          l.statusRefundPending,
-          AppColors.pendingBg,
-          AppColors.pendingFg,
-          AppColors.pendingDot,
-        ),
-        PaymentStatus.unknown => PaymentStatusStyle(
-          l.statusUnknown,
-          AppColors.unknownBg,
-          AppColors.unknownFg,
-          AppColors.unknownDot,
-        ),
-      };
+  factory PaymentStatusStyle.of(
+    PaymentStatus s,
+    AppLocalizations l,
+    AppColors c,
+  ) => switch (s) {
+    PaymentStatus.success => PaymentStatusStyle(
+      l.statusSuccess,
+      c.successBg,
+      c.successFg,
+      c.successDot,
+    ),
+    PaymentStatus.cancel => PaymentStatusStyle(
+      l.statusCancel,
+      c.cancelBg,
+      c.cancelFg,
+      c.cancelDot,
+    ),
+    PaymentStatus.pending => PaymentStatusStyle(
+      l.statusPending,
+      c.pendingBg,
+      c.pendingFg,
+      c.pendingDot,
+    ),
+    PaymentStatus.refunded => PaymentStatusStyle(
+      l.statusRefunded,
+      c.refundBg,
+      c.refundFg,
+      c.refundDot,
+    ),
+    PaymentStatus.refundPending => PaymentStatusStyle(
+      l.statusRefundPending,
+      c.pendingBg,
+      c.pendingFg,
+      c.pendingDot,
+    ),
+    PaymentStatus.unknown => PaymentStatusStyle(
+      l.statusUnknown,
+      c.unknownBg,
+      c.unknownFg,
+      c.unknownDot,
+    ),
+  };
 }

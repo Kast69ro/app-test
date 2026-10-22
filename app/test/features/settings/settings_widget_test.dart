@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:activbank_qr/features/home/presentation/widgets/qr_card.dart';
+import 'package:activbank_qr/features/pin/presentation/pin_screen.dart';
+import 'package:activbank_qr/features/settings/presentation/settings_screen.dart';
+
 import '../../helpers/test_app.dart';
 
 const phoneSize = Size(390, 844);
@@ -96,5 +100,58 @@ void main() {
     await tester.tap(find.text('Сменить код входа'));
     await tester.pumpAndSettle();
     expect(find.text('Текущий код'), findsOneWidget);
+  });
+
+  Brightness brightnessOf(WidgetTester tester, Type screen) =>
+      Theme.of(tester.element(find.byType(screen))).brightness;
+
+  testWidgets(
+    'тема: тёмная сохраняется после перезапуска, QR остаётся светлым',
+    (tester) async {
+      final store = await pumpTestApp(tester, FakeBackend(), size: phoneSize);
+      await signIn(tester);
+      await openSettings(tester);
+      expect(brightnessOf(tester, SettingsScreen), Brightness.light);
+
+      await tester.tap(find.text('Тёмная'));
+      await tester.pumpAndSettle();
+      expect(brightnessOf(tester, SettingsScreen), Brightness.dark);
+
+      await tester.tap(find.text('← Назад'));
+      await tester.pumpAndSettle();
+      // Карточка QR светлая в любой теме: логотип TJ QR тёмный.
+      final card = find.descendant(
+        of: find.byType(QrCard),
+        matching: find.byType(Builder),
+      );
+      expect(Theme.of(tester.element(card.first)).brightness, Brightness.light);
+
+      // Перезапуск: настройки и сессия те же — сразу экран кода, уже тёмный.
+      await pumpTestApp(
+        tester,
+        FakeBackend(),
+        store: store,
+        size: phoneSize,
+        prefs: null,
+      );
+      expect(brightnessOf(tester, PinScreen), Brightness.dark);
+    },
+  );
+
+  testWidgets('тема: по умолчанию светлая, «Системная» — за телефоном', (
+    tester,
+  ) async {
+    tester.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
+    addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
+
+    // Телефон в тёмной теме, но пользователь ещё ничего не выбрал — светлая.
+    await pumpTestApp(tester, FakeBackend(), size: phoneSize);
+    await signIn(tester);
+    await openSettings(tester);
+    expect(brightnessOf(tester, SettingsScreen), Brightness.light);
+
+    await tester.tap(find.text('Системная'));
+    await tester.pumpAndSettle();
+    expect(brightnessOf(tester, SettingsScreen), Brightness.dark);
   });
 }

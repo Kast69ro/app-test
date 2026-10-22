@@ -11,21 +11,23 @@ class StatTile extends StatelessWidget {
     required this.label,
     required this.amount,
     required this.count,
-    this.amountColor = AppColors.textPrimary,
+    this.amountColor,
   });
 
   final String label;
   final String amount;
   final String count;
-  final Color amountColor;
+
+  /// По умолчанию — `textPrimary` из темы.
+  final Color? amountColor;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: AppColors.surface,
-        border: Border.all(color: AppColors.border),
+        color: context.colors.surface,
+        border: Border.all(color: context.colors.border),
         borderRadius: BorderRadius.circular(AppDimens.radiusTile),
       ),
       child: Column(
@@ -33,10 +35,7 @@ class StatTile extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
-              fontSize: 14,
-              color: AppColors.textSecondary,
-            ),
+            style: TextStyle(fontSize: 14, color: context.colors.textSecondary),
           ),
           const SizedBox(height: 8),
           // Длинная сумма уменьшается, а не переносится.
@@ -45,14 +44,16 @@ class StatTile extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Text(
               amount,
-              style: AppTextStyles.amountTile.copyWith(color: amountColor),
+              style: AppTextStyles.amountTile.copyWith(
+                color: amountColor ?? context.colors.textPrimary,
+              ),
             ),
           ),
           const SizedBox(height: 8),
           Text(
             count,
             style: AppTextStyles.monoCaption.copyWith(
-              color: AppColors.textTertiary,
+              color: context.colors.textTertiary,
             ),
           ),
         ],

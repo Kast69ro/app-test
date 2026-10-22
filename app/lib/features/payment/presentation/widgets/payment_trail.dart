@@ -18,7 +18,7 @@ class PaymentTrail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final status = PaymentStatusStyle.of(payment.status, l);
+    final status = PaymentStatusStyle.of(payment.status, l, context.colors);
     final time = payment.createdAt == null
         ? ''
         : formatTime(payment.createdAt!);
@@ -26,8 +26,8 @@ class PaymentTrail extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surface,
-        border: Border.all(color: AppColors.borderList),
+        color: context.colors.surface,
+        border: Border.all(color: context.colors.borderList),
         borderRadius: BorderRadius.circular(AppDimens.radiusRow),
       ),
       child: Column(
@@ -37,17 +37,17 @@ class PaymentTrail extends StatelessWidget {
             header: true,
             child: Text(
               l.paymentTrail,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+                color: context.colors.textPrimary,
               ),
             ),
           ),
           const SizedBox(height: 12),
-          _Step(l.paymentTrailCreated, time, AppColors.unknownDot),
+          _Step(l.paymentTrailCreated, time, context.colors.unknownDot),
           const SizedBox(height: 12),
-          _Step(l.paymentTrailScanned, time, AppColors.unknownDot),
+          _Step(l.paymentTrailScanned, time, context.colors.unknownDot),
           const SizedBox(height: 12),
           _Step(status.label, time, status.dot),
         ],
@@ -80,14 +80,16 @@ class _Step extends StatelessWidget {
           Expanded(
             child: Text(
               name,
-              style: const TextStyle(
-                fontSize: 14,
-                color: AppColors.textPrimary,
-              ),
+              style: TextStyle(fontSize: 14, color: context.colors.textPrimary),
             ),
           ),
           const SizedBox(width: 10),
-          Text(time, style: AppTextStyles.monoCaption),
+          Text(
+            time,
+            style: AppTextStyles.monoCaption.copyWith(
+              color: context.colors.textSecondary,
+            ),
+          ),
         ],
       ),
     );

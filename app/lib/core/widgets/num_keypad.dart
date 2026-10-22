@@ -97,11 +97,11 @@ class _Key extends StatelessWidget {
       label: _isDelete ? 'Стереть' : label,
       excludeSemantics: true,
       child: Material(
-        color: AppColors.key,
+        color: context.colors.key,
         borderRadius: BorderRadius.circular(AppDimens.radiusKey),
         child: InkWell(
           borderRadius: BorderRadius.circular(AppDimens.radiusKey),
-          highlightColor: AppColors.keyPressed,
+          highlightColor: context.colors.keyPressed,
           onTap: onTap == null
               ? null
               : () {
@@ -122,7 +122,7 @@ class _Key extends StatelessWidget {
                 style: TextStyle(
                   fontSize: fontSize,
                   fontWeight: FontWeight.w500,
-                  color: AppColors.textPrimary,
+                  color: context.colors.textPrimary,
                 ),
               ),
             ),

@@ -63,7 +63,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
     final l = AppLocalizations.of(context);
     final session = ref.watch(sessionControllerProvider).value?.session;
     final p = widget.payment;
-    final status = PaymentStatusStyle.of(p.status, l);
+    final status = PaymentStatusStyle.of(p.status, l, context.colors);
     final at = p.createdAt;
     final terminalId = session?.terminalId ?? '';
     final terminalName = session?.terminalName ?? '';
@@ -77,7 +77,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
     );
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.colors.background,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -159,9 +159,9 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: const BoxDecoration(
-        color: AppColors.surface,
-        border: Border(bottom: BorderSide(color: AppColors.borderList)),
+      decoration: BoxDecoration(
+        color: context.colors.surface,
+        border: Border(bottom: BorderSide(color: context.colors.borderList)),
       ),
       child: SafeArea(
         bottom: false,
@@ -202,9 +202,9 @@ class _Actions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: const BoxDecoration(
-        color: AppColors.surface,
-        border: Border(top: BorderSide(color: AppColors.borderList)),
+      decoration: BoxDecoration(
+        color: context.colors.surface,
+        border: Border(top: BorderSide(color: context.colors.borderList)),
       ),
       child: SafeArea(
         top: false,

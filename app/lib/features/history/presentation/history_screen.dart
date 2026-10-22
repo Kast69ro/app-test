@@ -41,7 +41,7 @@ class HistoryScreen extends ConsumerWidget {
     final now = DateTime.now();
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.colors.background,
       body: SafeArea(
         bottom: false,
         child: Column(
@@ -58,7 +58,7 @@ class HistoryScreen extends ConsumerWidget {
             ),
             Expanded(
               child: RefreshIndicator(
-                color: AppColors.accent,
+                color: context.colors.accent,
                 onRefresh: () => _refresh(ref),
                 child: ListView(
                   // Тянуть вниз можно и при пустом списке.
@@ -79,13 +79,10 @@ class HistoryScreen extends ConsumerWidget {
                       const SizedBox(height: 14),
                     ],
                     if (data == null && history.isLoading)
+                      // Цвет — акцент из темы (progressIndicatorTheme).
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: 40),
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            color: AppColors.accent,
-                          ),
-                        ),
+                        child: Center(child: CircularProgressIndicator()),
                       )
                     else if (data != null && groups.isEmpty)
                       Padding(
@@ -95,10 +92,10 @@ class HistoryScreen extends ConsumerWidget {
                         ),
                         child: Text(
                           l.historyEmpty,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 15,
                             height: 1.5,
-                            color: AppColors.textTertiary,
+                            color: context.colors.textTertiary,
                           ),
                         ),
                       ),
@@ -171,10 +168,10 @@ class _DayGroupView extends StatelessWidget {
                     header: true,
                     child: Text(
                       label,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+                        color: context.colors.textPrimary,
                       ),
                     ),
                   ),
@@ -183,7 +180,7 @@ class _DayGroupView extends StatelessWidget {
                 Text(
                   total,
                   style: AppTextStyles.monoCaption.copyWith(
-                    color: AppColors.textTertiary,
+                    color: context.colors.textTertiary,
                   ),
                 ),
               ],
@@ -213,8 +210,8 @@ class _LoadMoreButton extends StatelessWidget {
     return PressableCard(
       radius: AppDimens.radiusRow,
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      borderColor: AppColors.borderList,
-      pressedColor: AppColors.disabledBg,
+      borderColor: context.colors.borderList,
+      pressedColor: context.colors.disabledBg,
       onTap: onTap,
       child: ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 52),
@@ -222,7 +219,7 @@ class _LoadMoreButton extends StatelessWidget {
           child: Text(
             label,
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 15, color: AppColors.textPrimary),
+            style: TextStyle(fontSize: 15, color: context.colors.textPrimary),
           ),
         ),
       ),

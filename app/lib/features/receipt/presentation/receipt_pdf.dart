@@ -24,6 +24,9 @@ class ReceiptPdf {
 
   static const width = 360.0;
 
+  /// Чек — документ: всегда светлый, в какой бы теме ни было приложение.
+  static const _colors = AppColors.light;
+
   /// Обычно `rootBundle.load`; в тестах — подмена.
   final Future<ByteData> Function(String path) _loadAsset;
 
@@ -33,7 +36,7 @@ class ReceiptPdf {
     final f = _fonts ??= await _Fonts.load(_loadAsset);
     final p = receipt.payment;
     final at = p.createdAt;
-    final status = PaymentStatusStyle.of(p.status, l);
+    final status = PaymentStatusStyle.of(p.status, l, _colors);
     String orDash(String v) => v.isEmpty ? '—' : v;
 
     final rows = [
@@ -52,7 +55,7 @@ class ReceiptPdf {
         pageFormat: const PdfPageFormat(width, double.infinity),
         theme: pw.ThemeData.withFont(base: f.regular, bold: f.bold),
         build: (_) => pw.Container(
-          color: _c(AppColors.background),
+          color: _c(_colors.background),
           padding: const pw.EdgeInsets.all(16),
           child: pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.stretch,
@@ -63,7 +66,7 @@ class ReceiptPdf {
                   font: f.bold,
                   fontSize: 16,
                   letterSpacing: -0.16,
-                  color: _c(AppColors.textPrimary),
+                  color: _c(_colors.textPrimary),
                 ),
               ),
               pw.SizedBox(height: 2),
@@ -83,7 +86,7 @@ class ReceiptPdf {
                         font: f.semiBold,
                         fontSize: 32,
                         letterSpacing: -0.64,
-                        color: _c(AppColors.textPrimary),
+                        color: _c(_colors.textPrimary),
                       ),
                     ),
                     pw.SizedBox(height: 10),
@@ -126,7 +129,7 @@ class ReceiptPdf {
                 textAlign: pw.TextAlign.center,
                 style: pw.TextStyle(
                   fontSize: 12,
-                  color: _c(AppColors.textTertiary),
+                  color: _c(_colors.textTertiary),
                 ),
               ),
             ],
@@ -146,10 +149,7 @@ class ReceiptPdf {
           constraints: pw.BoxConstraints(maxWidth: constraints!.maxWidth / 2),
           child: pw.Text(
             label,
-            style: pw.TextStyle(
-              fontSize: 14,
-              color: _c(AppColors.textSecondary),
-            ),
+            style: pw.TextStyle(fontSize: 14, color: _c(_colors.textSecondary)),
           ),
         ),
         pw.SizedBox(width: 14),
@@ -160,7 +160,7 @@ class ReceiptPdf {
             style: pw.TextStyle(
               font: f.medium,
               fontSize: 14,
-              color: _c(AppColors.textPrimary),
+              color: _c(_colors.textPrimary),
             ),
           ),
         ),
@@ -170,12 +170,12 @@ class ReceiptPdf {
 
   static final _caption = pw.TextStyle(
     fontSize: 13,
-    color: _c(AppColors.textSecondary),
+    color: _c(_colors.textSecondary),
   );
 
   static final _card = pw.BoxDecoration(
-    color: _c(AppColors.surface),
-    border: pw.Border.all(color: _c(AppColors.borderList)),
+    color: _c(_colors.surface),
+    border: pw.Border.all(color: _c(_colors.borderList)),
     borderRadius: pw.BorderRadius.circular(AppDimens.radiusRow),
   );
 

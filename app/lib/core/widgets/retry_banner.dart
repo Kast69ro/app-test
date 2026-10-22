@@ -24,7 +24,7 @@ class RetryBanner extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.fromLTRB(16, 4, 4, 4),
         decoration: BoxDecoration(
-          color: AppColors.errorBg,
+          color: context.colors.errorBg,
           borderRadius: BorderRadius.circular(AppDimens.radiusRow),
         ),
         child: Row(
@@ -34,10 +34,10 @@ class RetryBanner extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Text(
                   text,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     height: 1.45,
-                    color: AppColors.error,
+                    color: context.colors.error,
                   ),
                 ),
               ),
@@ -45,7 +45,7 @@ class RetryBanner extends StatelessWidget {
             TextButton(
               onPressed: onRetry,
               style: TextButton.styleFrom(
-                foregroundColor: AppColors.error,
+                foregroundColor: context.colors.error,
                 minimumSize: const Size(AppDimens.minTap, AppDimens.minTap),
                 textStyle: const TextStyle(
                   fontSize: 14,

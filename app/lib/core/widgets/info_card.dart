@@ -22,8 +22,8 @@ class InfoCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surface,
-        border: Border.all(color: AppColors.borderList),
+        color: context.colors.surface,
+        border: Border.all(color: context.colors.borderList),
         borderRadius: BorderRadius.circular(AppDimens.radiusRow),
       ),
       child: Column(
@@ -54,9 +54,9 @@ class InfoRow extends StatelessWidget {
               constraints: BoxConstraints(maxWidth: constraints.maxWidth / 2),
               child: Text(
                 label,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
-                  color: AppColors.textSecondary,
+                  color: context.colors.textSecondary,
                 ),
               ),
             ),
@@ -65,11 +65,11 @@ class InfoRow extends StatelessWidget {
               child: Text(
                 value,
                 textAlign: TextAlign.right,
-                style: const TextStyle(
+                style: TextStyle(
                   fontFeatures: AppFonts.tabular,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: AppColors.textPrimary,
+                  color: context.colors.textPrimary,
                 ),
               ),
             ),

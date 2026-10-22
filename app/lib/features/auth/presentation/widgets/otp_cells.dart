@@ -25,17 +25,17 @@ class OtpCells extends StatelessWidget {
     for (var i = 0; i < length; i++) {
       if (i > 0) cells.add(const SizedBox(width: 6));
       final border = hasError
-          ? AppColors.errorBorder
+          ? context.colors.errorBorder
           : i == code.length
-          ? AppColors.accent
-          : AppColors.borderList;
+          ? context.colors.accent
+          : context.colors.borderList;
       cells.add(
         Expanded(
           child: Container(
             constraints: const BoxConstraints(minHeight: 58),
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: AppColors.surface,
+              color: context.colors.surface,
               border: Border.all(color: border, width: 1.5),
               borderRadius: BorderRadius.circular(AppDimens.radiusRow),
             ),
@@ -43,11 +43,11 @@ class OtpCells extends StatelessWidget {
               i < code.length ? code[i] : '',
               textScaler: MediaQuery.textScalerOf(context)
                   .clamp(maxScaleFactor: 1.3),
-              style: const TextStyle(
+              style: TextStyle(
                 fontFeatures: AppFonts.tabular,
                 fontSize: 24,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+                color: context.colors.textPrimary,
               ),
             ),
           ),
