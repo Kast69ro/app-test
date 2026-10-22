@@ -4,11 +4,12 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/error_box.dart';
-import '../../../../core/widgets/num_keypad.dart';
+import '../../../../core/widgets/digit_input.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/pin_repository.dart';
 
-/// Раскладка экрана кода: шапка, заголовок, точки, ошибка, клавиатура.
+/// Раскладка экрана кода: шапка, заголовок, точки, ошибка.
+/// Ввод — с системной цифровой клавиатуры (см. [DigitInput]).
 /// Общая для входа по коду и для смены кода в настройках.
 class PinEntryView extends StatelessWidget {
   const PinEntryView({
@@ -16,22 +17,22 @@ class PinEntryView extends StatelessWidget {
     required this.header,
     required this.title,
     required this.subtitle,
-    required this.filled,
+    required this.value,
     required this.error,
     required this.onKey,
-    required this.enabled,
     this.footer,
   });
 
   final Widget header;
   final String title;
   final String subtitle;
-  final int filled;
+
+  /// Введённые цифры (на экране — закрашенные точки).
+  final String value;
   final String? error;
   final ValueChanged<String?> onKey;
-  final bool enabled;
 
-  /// Под клавиатурой, например «Выйти».
+  /// Внизу, над клавиатурой, например «Выйти».
   final Widget? footer;
 
   @override
@@ -67,10 +68,23 @@ class PinEntryView extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 22),
-                      _PinDots(
-                        filled: filled,
-                        hasError: error != null,
-                        label: l.pinEntered(filled, pinLength),
+                      // Тап по точкам снова открывает клавиатуру,
+                      // если её закрыли.
+                      DigitInput(
+                        value: value,
+                        maxLength: pinLength,
+                        onKey: onKey,
+                        obscure: true,
+                        child: SizedBox(
+                          height: 48,
+                          child: Center(
+                            child: _PinDots(
+                              filled: value.length,
+                              hasError: error != null,
+                              label: l.pinEntered(value.length, pinLength),
+                            ),
+                          ),
+                        ),
                       ),
                       if (error != null) ...[
                         const SizedBox(height: 22),
@@ -79,15 +93,6 @@ class PinEntryView extends StatelessWidget {
                     ],
                   ),
                 ),
-              ),
-              const SizedBox(height: 18),
-              NumKeypad(
-                onKey: onKey,
-                enabled: enabled,
-                minKeyHeight: 48,
-                maxKeyHeight: 62,
-                heightFactor: 0.09,
-                fontSize: 22,
               ),
               if (footer != null) ...[const SizedBox(height: 14), footer!],
             ],

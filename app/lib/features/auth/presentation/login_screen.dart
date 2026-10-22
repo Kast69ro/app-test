@@ -7,7 +7,7 @@ import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/phone_format.dart';
 import '../../../core/widgets/brand_header.dart';
 import '../../../core/widgets/error_box.dart';
-import '../../../core/widgets/num_keypad.dart';
+import '../../../core/widgets/digit_input.dart';
 import '../../../core/widgets/primary_button.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../pin/data/pin_repository.dart';
@@ -60,12 +60,13 @@ class LoginScreen extends ConsumerWidget {
               AppDimens.screenPadding,
               26,
             ),
-            // Раскладка как в прототипе: всё идёт сверху подряд. На маленьком
-            // экране прокручивается только верх, кнопка и клавиатура видны всегда.
+            // Верх прокручивается, кнопка прижата к низу и стоит прямо над
+            // системной клавиатурой. Ошибка появляется в прокручиваемой части,
+            // поэтому ни кнопка, ни клавиатура не сдвигаются.
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Flexible(
+                Expanded(
                   child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -82,7 +83,21 @@ class LoginScreen extends ConsumerWidget {
                             ),
                           ),
                           const SizedBox(height: 20),
-                          PhoneField(digits: s.phone, label: l.loginPhoneLabel),
+                          DigitInput(
+                            key: const ValueKey('phone'),
+                            value: s.phone,
+                            maxLength: phoneDigits,
+                            onKey: c.key,
+                            keepLastDigits: true,
+                            autofillHints: const [
+                              AutofillHints.telephoneNumberNational,
+                            ],
+                            onSubmitted: c.submit,
+                            child: PhoneField(
+                              digits: s.phone,
+                              label: l.loginPhoneLabel,
+                            ),
+                          ),
                         ] else
                           _CodeStep(state: s, controller: c, l: l),
                         if (error != null) ...[
@@ -99,8 +114,6 @@ class LoginScreen extends ConsumerWidget {
                   loading: s.loading,
                   onPressed: s.canSubmit ? c.submit : null,
                 ),
-                const SizedBox(height: 14),
-                NumKeypad(onKey: c.key, enabled: !s.loading),
               ],
             ),
           ),
@@ -138,11 +151,20 @@ class _CodeStep extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        OtpCells(
-          code: state.code,
-          length: otpLength,
-          hasError: state.failure != null,
-          label: l.loginCodeLabel,
+        // oneTimeCode: iOS подставляет код из «Сообщений» над клавиатурой,
+        // на Android его предлагает клавиатура / сервис автозаполнения.
+        DigitInput(
+          key: const ValueKey('code'),
+          value: state.code,
+          maxLength: otpLength,
+          onKey: controller.key,
+          autofillHints: const [AutofillHints.oneTimeCode],
+          child: OtpCells(
+            code: state.code,
+            length: otpLength,
+            hasError: state.failure != null,
+            label: l.loginCodeLabel,
+          ),
         ),
         const SizedBox(height: 2),
         Wrap(

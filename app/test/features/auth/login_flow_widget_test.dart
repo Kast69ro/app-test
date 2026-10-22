@@ -1,3 +1,5 @@
+import 'package:activbank_qr/core/widgets/primary_button.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../helpers/test_app.dart';
@@ -89,5 +91,48 @@ void main() {
 
     expect(find.text('Коды не совпали. Задайте код заново.'), findsOneWidget);
     expect(find.text('Создайте код входа'), findsOneWidget);
+  });
+
+  /// Поле с фокусом — туда пишет системная клавиатура.
+  final focused = find.byWidgetPredicate(
+    (w) => w is EditableText && w.focusNode.hasFocus,
+  );
+
+  testWidgets('номер вставлен целиком с +992 — берём последние 9 цифр', (
+    tester,
+  ) async {
+    await pumpTestApp(tester, FakeBackend());
+    await tester.enterText(focused, '+992 93 123 45 67');
+    await tester.pump();
+    expect(find.text('93 123 45 67'), findsOneWidget);
+  });
+
+  testWidgets('код из SMS автозаполнением — сразу уходит на проверку', (
+    tester,
+  ) async {
+    await pumpTestApp(tester, FakeBackend());
+    await typeDigits(tester, '931234567');
+    await tester.tap(find.text('Получить код'));
+    await tester.pumpAndSettle(const Duration(milliseconds: 100));
+
+    // Автозаполнение вставляет все 6 цифр разом.
+    await tester.enterText(focused, '123456');
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pumpAndSettle();
+    expect(find.text('Создайте код входа'), findsOneWidget);
+  });
+
+  testWidgets('ошибка не сдвигает кнопку над клавиатурой', (tester) async {
+    await pumpTestApp(tester, FakeBackend()..verifyStatus = 400);
+    await typeDigits(tester, '931234567');
+    await tester.tap(find.text('Получить код'));
+    await tester.pumpAndSettle(const Duration(milliseconds: 100));
+    final before = tester.getRect(find.byType(PrimaryButton));
+
+    await typeDigits(tester, '000000');
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pumpAndSettle();
+    expect(find.text('Осталось попыток: 4'), findsOneWidget);
+    expect(tester.getRect(find.byType(PrimaryButton)), before);
   });
 }

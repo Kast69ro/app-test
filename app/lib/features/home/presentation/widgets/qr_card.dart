@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
-import '../../../../core/theme/app_theme.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/pressable_card.dart';
 import '../../../../core/widgets/qr_code_view.dart';
@@ -33,60 +32,60 @@ class QrCard extends ConsumerWidget {
         : ref.watch(qrBuildProvider(payload!));
     final code = build?.code;
 
-    // Всегда светлая: логотип TJ QR тёмный, а QR сканируется лучше на белом.
-    return Theme(
-      data: AppTheme.light,
-      child: Builder(
-        builder: (context) => PressableCard(
-          radius: AppDimens.radiusQrCard,
-          padding: const EdgeInsets.fromLTRB(22, 22, 22, 20),
-          onTap: code == null ? null : onOpen,
-          semanticLabel: code == null ? null : l.qrOpenFullscreen,
-          child: Column(
-            children: [
-              const FittedBox(fit: BoxFit.scaleDown, child: TjQrBrandRow()),
-              const SizedBox(height: 14),
-              Text(
-                merchant,
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.tjqrMerchant,
-              ),
-              const SizedBox(height: 14),
-              ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 286),
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: ColoredBox(
-                    color: AppColors.qrBackdrop,
-                    child: FractionallySizedBox(
-                      widthFactor: 0.764,
-                      heightFactor: 0.764,
-                      child: code != null
-                          ? QrCodeView(code: code, semanticLabel: l.qrSemantic)
-                          : const QrPlaceholder(),
-                    ),
-                  ),
-                ),
-              ),
-              if (build?.error != null) ...[
-                const SizedBox(height: 14),
-                Text(
-                  build!.error == QrBuildError.tooLong
-                      ? l.qrTooLong(payload!.length)
-                      : l.qrInvalid,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 13,
-                    height: 1.4,
-                    color: context.colors.error,
-                  ),
-                ),
-              ],
-            ],
+    final c = context.colors;
+    // Светлая — как в прототипе: QR на серой подложке.
+    // Тёмная — как в Apple Wallet: белая скруглённая плашка прямо на карточке.
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final radius = dark ? 18.0 : 0.0;
+
+    return PressableCard(
+      radius: AppDimens.radiusQrCard,
+      padding: const EdgeInsets.fromLTRB(22, 22, 22, 20),
+      onTap: code == null ? null : onOpen,
+      semanticLabel: code == null ? null : l.qrOpenFullscreen,
+      child: Column(
+        children: [
+          const FittedBox(fit: BoxFit.scaleDown, child: TjQrBrandRow()),
+          const SizedBox(height: 14),
+          Text(
+            merchant,
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.tjqrMerchant.copyWith(color: c.tjqrText),
           ),
-        ),
+          const SizedBox(height: 14),
+          ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: dark ? 250 : 286),
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: ColoredBox(
+                color: dark ? Colors.transparent : c.qrBackdrop,
+                child: FractionallySizedBox(
+                  widthFactor: dark ? 1 : 0.764,
+                  heightFactor: dark ? 1 : 0.764,
+                  child: code != null
+                      ? QrCodeView(
+                          code: code,
+                          semanticLabel: l.qrSemantic,
+                          radius: radius,
+                        )
+                      : QrPlaceholder(radius: radius),
+                ),
+              ),
+            ),
+          ),
+          if (build?.error != null) ...[
+            const SizedBox(height: 14),
+            Text(
+              build!.error == QrBuildError.tooLong
+                  ? l.qrTooLong(payload!.length)
+                  : l.qrInvalid,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 13, height: 1.4, color: c.error),
+            ),
+          ],
+        ],
       ),
     );
   }

@@ -39,10 +39,9 @@ class ChangePinScreen extends ConsumerWidget {
       ),
       title: title,
       subtitle: subtitle,
-      filled: s.pin.length,
+      value: s.pin,
       error: pinErrorText(s.error, l),
       onKey: c.key,
-      enabled: !s.busy,
     );
   }
 }

@@ -32,6 +32,8 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.disabledText,
     required this.tabActiveBg,
     required this.segmentSelected,
+    required this.tjqrText,
+    required this.qrBackdrop,
     required this.successBg,
     required this.successFg,
     required this.successDot,
@@ -85,6 +87,10 @@ class AppColors extends ThemeExtension<AppColors> {
   /// Выбранный сегмент переключателя (тема в настройках) поверх [key].
   final Color segmentSelected;
 
+  /// Блок «TJ QR | QR рамзи ягона» и подложка вокруг QR на главной.
+  final Color tjqrText;
+  final Color qrBackdrop;
+
   // Статусы операций: фон чипа / текст / точка и полоса слева.
   final Color successBg;
   final Color successFg;
@@ -101,10 +107,6 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color unknownBg;
   final Color unknownFg;
   final Color unknownDot;
-
-  /// Блок «TJ QR | QR рамзи ягона». Он всегда на белом — в обеих темах.
-  static const tjqrText = Color(0xFF4F4F4F);
-  static const qrBackdrop = Color(0x29898383);
 
   static const light = AppColors(
     background: Color(0xFFF4F4F2),
@@ -130,6 +132,8 @@ class AppColors extends ThemeExtension<AppColors> {
     disabledText: Color(0xFFA6ABB0),
     tabActiveBg: Color(0xFFFDECEC),
     segmentSelected: Color(0xFFFFFFFF),
+    tjqrText: Color(0xFF4F4F4F),
+    qrBackdrop: Color(0x29898383),
     successBg: Color(0xFFE8F5F0),
     successFg: Color(0xFF0B7259),
     successDot: Color(0xFF0E8F6F),
@@ -147,47 +151,51 @@ class AppColors extends ThemeExtension<AppColors> {
     unknownDot: Color(0xFF9AA0A6),
   );
 
-  /// Тёмная: тёплые серые в тон светлому фону, акцент тот же.
-  /// Цвета статусов светлее, чтобы читались на тёмном (контраст ≥ 4,5:1).
+  /// Тёмная — по системным цветам Apple (HIG, Dark Mode): чёрный фон,
+  /// карточки на ступень светлее, текст белый / systemGray, статусы —
+  /// тёмные варианты systemGreen / systemRed / systemOrange / systemBlue.
+  /// Фон чипа статуса — цвет статуса 18 % поверх карточки. Акцент — бренд.
   static const dark = AppColors(
-    background: Color(0xFF121314),
-    surface: Color(0xFF1C1D1F),
-    surfacePressed: Color(0xFF242527),
-    border: Color(0xFF2B2C2F),
-    borderList: Color(0xFF2E2F32),
-    textPrimary: Color(0xFFF2F2EF),
-    textSecondary: Color(0xFFA4A9AE),
-    textTertiary: Color(0xFF7C8186),
+    background: Color(0xFF000000),
+    surface: Color(0xFF1C1C1E),
+    surfacePressed: Color(0xFF2C2C2E),
+    border: Color(0xFF2C2C2E),
+    borderList: Color(0xFF2C2C2E),
+    textPrimary: Color(0xFFFFFFFF),
+    textSecondary: Color(0xFF8E8E93),
+    textTertiary: Color(0xFF636366),
     accent: Color(0xFFE31E24),
-    error: Color(0xFFF2766E),
-    errorBg: Color(0xFF3A1F1E),
-    errorBorder: Color(0xFF8A3F3A),
-    key: Color(0xFF26272A),
-    keyPressed: Color(0xFF303135),
-    cellIdle: Color(0xFF45474B),
-    buttonPrimary: Color(0xFFF2F2EF),
-    buttonPrimaryText: Color(0xFF16181A),
-    buttonLoading: Color(0xFFC9CAC6),
-    buttonDisabled: Color(0xFF2E2F32),
-    disabledBg: Color(0xFF232426),
-    disabledText: Color(0xFF63686D),
-    tabActiveBg: Color(0xFF3A1B1C),
-    segmentSelected: Color(0xFF3A3B3F),
-    successBg: Color(0xFF12322A),
-    successFg: Color(0xFF5BD3AE),
-    successDot: Color(0xFF2BB38D),
-    cancelBg: Color(0xFF3A1F1E),
-    cancelFg: Color(0xFFF2908A),
-    cancelDot: Color(0xFFE0574F),
-    pendingBg: Color(0xFF382C12),
-    pendingFg: Color(0xFFF0C25E),
-    pendingDot: Color(0xFFD89A1F),
-    refundBg: Color(0xFF1E2540),
-    refundFg: Color(0xFFA3B4EE),
-    refundDot: Color(0xFF7088D0),
-    unknownBg: Color(0xFF26272A),
-    unknownFg: Color(0xFFA4A9AE),
-    unknownDot: Color(0xFF7C8186),
+    error: Color(0xFFFF453A),
+    errorBg: Color(0xFF452323),
+    errorBorder: Color(0xFF8C2F29),
+    key: Color(0xFF2C2C2E),
+    keyPressed: Color(0xFF3A3A3C),
+    cellIdle: Color(0xFF48484A),
+    buttonPrimary: Color(0xFFFFFFFF),
+    buttonPrimaryText: Color(0xFF000000),
+    buttonLoading: Color(0xFFD1D1D6),
+    buttonDisabled: Color(0xFF2C2C2E),
+    disabledBg: Color(0xFF2C2C2E),
+    disabledText: Color(0xFF636366),
+    tabActiveBg: Color(0xFF441C1F),
+    segmentSelected: Color(0xFF636366),
+    tjqrText: Color(0xFFE5E5EA),
+    qrBackdrop: Color(0xFF2C2C2E),
+    successBg: Color(0xFF203D28),
+    successFg: Color(0xFF30D158),
+    successDot: Color(0xFF30D158),
+    cancelBg: Color(0xFF452323),
+    cancelFg: Color(0xFFFF6961),
+    cancelDot: Color(0xFFFF453A),
+    pendingBg: Color(0xFF453419),
+    pendingFg: Color(0xFFFFB340),
+    pendingDot: Color(0xFFFF9F0A),
+    refundBg: Color(0xFF192F46),
+    refundFg: Color(0xFF64A8FF),
+    refundDot: Color(0xFF0A84FF),
+    unknownBg: Color(0xFF2C2C2E),
+    unknownFg: Color(0xFF8E8E93),
+    unknownDot: Color(0xFF636366),
   );
 
   @override
@@ -222,6 +230,8 @@ class AppColors extends ThemeExtension<AppColors> {
       disabledText: c(disabledText, other.disabledText),
       tabActiveBg: c(tabActiveBg, other.tabActiveBg),
       segmentSelected: c(segmentSelected, other.segmentSelected),
+      tjqrText: c(tjqrText, other.tjqrText),
+      qrBackdrop: c(qrBackdrop, other.qrBackdrop),
       successBg: c(successBg, other.successBg),
       successFg: c(successFg, other.successFg),
       successDot: c(successDot, other.successDot),

@@ -1,7 +1,5 @@
 import 'package:flutter/painting.dart';
 
-import 'app_colors.dart';
-
 abstract final class AppFonts {
   /// Фирменный шрифт банка — весь текст приложения.
   static const brand = 'Montserrat';
@@ -17,7 +15,6 @@ abstract final class AppFonts {
 ///
 /// Цвет не задан: основной текст берёт его из темы, остальное —
 /// `.copyWith(color: context.colors.textSecondary)` на месте.
-/// Исключение — блок TJ QR: он всегда на белом.
 abstract final class AppTextStyles {
   static const screenTitle = TextStyle(
     fontSize: 26,
@@ -91,12 +88,10 @@ abstract final class AppTextStyles {
     fontSize: 19,
     fontWeight: FontWeight.w700,
     height: 1.12,
-    color: AppColors.tjqrText,
   );
 
   static const tjqrMerchant = TextStyle(
     fontFamily: AppFonts.lato,
     fontSize: 14,
-    color: AppColors.tjqrText,
   );
 }

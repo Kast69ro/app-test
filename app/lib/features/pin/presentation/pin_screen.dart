@@ -40,10 +40,9 @@ class PinScreen extends ConsumerWidget {
         header: const BrandHeader(),
         title: title,
         subtitle: subtitle,
-        filled: s.pin.length,
+        value: s.pin,
         error: pinErrorText(s.error, l),
         onKey: c.key,
-        enabled: !s.busy,
         footer: s.stage == PinStage.unlock
             ? TextLink(
                 label: l.logout,

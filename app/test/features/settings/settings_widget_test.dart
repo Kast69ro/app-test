@@ -106,7 +106,7 @@ void main() {
       Theme.of(tester.element(find.byType(screen))).brightness;
 
   testWidgets(
-    'тема: тёмная сохраняется после перезапуска, QR остаётся светлым',
+    'тема: тёмная сохраняется после перезапуска, лого TJ QR светлое',
     (tester) async {
       final store = await pumpTestApp(tester, FakeBackend(), size: phoneSize);
       await signIn(tester);
@@ -119,12 +119,14 @@ void main() {
 
       await tester.tap(find.text('← Назад'));
       await tester.pumpAndSettle();
-      // Карточка QR светлая в любой теме: логотип TJ QR тёмный.
-      final card = find.descendant(
-        of: find.byType(QrCard),
-        matching: find.byType(Builder),
+      // На тёмной карточке — вариант лого со светлыми буквами «QR».
+      final logo = tester.widget<Image>(
+        find.descendant(of: find.byType(QrCard), matching: find.byType(Image)),
       );
-      expect(Theme.of(tester.element(card.first)).brightness, Brightness.light);
+      expect(
+        (logo.image as AssetImage).assetName,
+        'assets/images/tjqr-logo-dark.png',
+      );
 
       // Перезапуск: настройки и сессия те же — сразу экран кода, уже тёмный.
       await pumpTestApp(

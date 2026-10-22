@@ -7,6 +7,7 @@ import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/date_format.dart';
 import '../../../core/utils/money_format.dart';
 import '../../../core/widgets/info_card.dart';
+import '../../../core/widgets/sheet_page.dart';
 import '../../../core/widgets/text_link.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../auth/presentation/session_controller.dart';
@@ -21,6 +22,9 @@ import 'widgets/status_chip.dart';
 
 /// Карточка операции. Прототип: `POS Terminal.dc.html`, стр. 135–174.
 /// Вместо «Печать чека» — «Поделиться чеком» (только для оплаченных).
+///
+/// Открывается шторкой поверх истории (см. [SheetPage]): закрыть можно
+/// свайпом вниз, тапом по затемнению или кнопкой «← Назад».
 class PaymentScreen extends ConsumerStatefulWidget {
   const PaymentScreen({super.key, required this.payment});
 
@@ -76,10 +80,13 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
       terminalId: terminalId,
     );
 
-    return Scaffold(
+    return SheetScaffold(
       backgroundColor: context.colors.background,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      handleColor: context.colors.cellIdle,
+      // Шапка — внутри списка: свайп вниз по ней тоже закрывает шторку.
+      builder: (context, controller) => ListView(
+        controller: controller,
+        padding: EdgeInsets.zero,
         children: [
           _Header(
             backLabel: l.back,
@@ -87,9 +94,10 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
             status: status,
             amount: formatMoney(p.amount),
           ),
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(16),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 InfoCard(
                   children: [
@@ -112,23 +120,23 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
               ],
             ),
           ),
-          _Actions(
-            children: [
-              RefundButton(label: l.paymentRefund),
-              if (p.status == PaymentStatus.success)
-                ShareReceiptButton(
-                  key: _shareKey,
-                  label: switch (_share) {
-                    _Share.idle => l.paymentShare,
-                    _Share.busy => l.paymentSharing,
-                    _Share.failed => l.paymentShareError,
-                  },
-                  busy: _share == _Share.busy,
-                  failed: _share == _Share.failed,
-                  onTap: () => _shareReceipt(receipt),
-                ),
-            ],
-          ),
+        ],
+      ),
+      bottom: _Actions(
+        children: [
+          RefundButton(label: l.paymentRefund),
+          if (p.status == PaymentStatus.success)
+            ShareReceiptButton(
+              key: _shareKey,
+              label: switch (_share) {
+                _Share.idle => l.paymentShare,
+                _Share.busy => l.paymentSharing,
+                _Share.failed => l.paymentShareError,
+              },
+              busy: _share == _Share.busy,
+              failed: _share == _Share.failed,
+              onTap: () => _shareReceipt(receipt),
+            ),
         ],
       ),
     );
@@ -164,9 +172,10 @@ class _Header extends StatelessWidget {
         border: Border(bottom: BorderSide(color: context.colors.borderList)),
       ),
       child: SafeArea(
+        top: false,
         bottom: false,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
+          padding: const EdgeInsets.fromLTRB(16, 22, 16, 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

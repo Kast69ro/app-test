@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../core/theme/app_colors.dart';
+import '../core/widgets/sheet_page.dart';
 import '../features/auth/domain/session.dart';
 import '../features/auth/presentation/login_screen.dart';
 import '../features/auth/presentation/session_controller.dart';
@@ -124,8 +125,11 @@ GoRouter router(Ref ref) {
                     parentNavigatorKey: rootKey,
                     redirect: (context, state) =>
                         state.extra is Payment ? null : Routes.history,
-                    builder: (context, state) =>
-                        PaymentScreen(payment: state.extra! as Payment),
+                    // Шторкой поверх истории, а не новой страницей.
+                    pageBuilder: (context, state) => SheetPage(
+                      key: state.pageKey,
+                      child: PaymentScreen(payment: state.extra! as Payment),
+                    ),
                   ),
                 ],
               ),

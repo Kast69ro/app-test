@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'dart:ui';
 
 import 'package:activbank_qr/features/history/presentation/widgets/history_row.dart';
 import 'package:activbank_qr/features/payment/presentation/payment_screen.dart';
@@ -22,6 +21,12 @@ class FakeSharer implements ReceiptSharer {
     return Future.value();
   }
 }
+
+/// Только то, что в шторке: позади неё видна история с теми же текстами.
+Finder inSheet(Finder f) =>
+    find.descendant(of: find.byType(PaymentScreen), matching: f);
+
+final sheetList = inSheet(find.byType(Scrollable));
 
 void main() {
   final at = DateTime(2026, 9, 8, 14, 12);
@@ -52,7 +57,8 @@ void main() {
     await openPayment(tester, payment(1234.5, at), size: const Size(390, 844));
 
     expect(find.byType(PaymentScreen), findsOneWidget);
-    expect(find.text('История'), findsNothing); // без нижней панели
+    // Шторка поверх истории: история видна, но закрыта затемнением.
+    expect(find.text('История').hitTestable(), findsNothing);
     expect(find.text('1 234,50').hitTestable(), findsOneWidget);
     expect(find.text('08.09').hitTestable(), findsOneWidget);
     expect(find.text('Душанбе Сити Банк').hitTestable(), findsOneWidget);
@@ -67,27 +73,55 @@ void main() {
     expect(find.byType(HistoryRow), findsOneWidget);
   });
 
+  testWidgets('шторка закрывается свайпом вниз', (tester) async {
+    await openPayment(tester, payment(1234.5, at), size: const Size(390, 844));
+
+    // Тянем за шапку шторки (чуть ниже её верхнего края).
+    final top = tester.getTopLeft(find.byType(PaymentScreen));
+    await tester.flingFrom(
+      top + const Offset(150, 60),
+      const Offset(0, 500),
+      1500,
+    );
+    await tester.pumpAndSettle();
+    expect(find.byType(PaymentScreen), findsNothing);
+    expect(find.byType(HistoryRow).hitTestable(), findsOneWidget);
+  });
+
   testWidgets('маленький экран и крупный шрифт — без переполнений', (
     tester,
   ) async {
     await openPayment(tester, payment(1234567.89, at));
-    await tester.scrollUntilVisible(find.text('Клиент отсканировал'), 100);
+    await tester.scrollUntilVisible(
+      find.text('Клиент отсканировал'),
+      100,
+      scrollable: sheetList,
+    );
     expect(find.text('Поделиться чеком'), findsOneWidget);
   });
 
   testWidgets('отклонённый платёж — чеком не делимся', (tester) async {
     await openPayment(tester, payment(20, at, status: 'cancel'));
 
-    await tester.scrollUntilVisible(find.text('Ход операции'), 100);
-    expect(find.text('Отклонён'), findsNWidgets(2)); // чип и «Ход операции»
+    await tester.scrollUntilVisible(
+      find.text('Ход операции'),
+      100,
+      scrollable: sheetList,
+    );
+    // Чип и «Ход операции» в шторке (третий — строка истории позади).
+    expect(inSheet(find.text('Отклонён')), findsNWidgets(2));
     expect(find.text('Поделиться чеком'), findsNothing);
   });
 
   testWidgets('незнакомый статус — чеком не делимся', (tester) async {
     await openPayment(tester, payment(20, at, status: 'weird'));
 
-    await tester.scrollUntilVisible(find.text('Ход операции'), 100);
-    expect(find.text('Неизвестно'), findsNWidgets(2));
+    await tester.scrollUntilVisible(
+      find.text('Ход операции'),
+      100,
+      scrollable: sheetList,
+    );
+    expect(inSheet(find.text('Неизвестно')), findsNWidgets(2));
     expect(find.text('Поделиться чеком'), findsNothing);
   });
 

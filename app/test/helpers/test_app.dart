@@ -129,9 +129,14 @@ Future<MemorySecureStore> pumpTestApp(
   return mem;
 }
 
+/// Набор цифр по одной с системной клавиатуры — в поле, где сейчас фокус.
 Future<void> typeDigits(WidgetTester tester, String digits) async {
+  final field = find.byWidgetPredicate(
+    (w) => w is EditableText && w.focusNode.hasFocus,
+  );
   for (final d in digits.split('')) {
-    await tester.tap(find.bySemanticsLabel(d).last);
+    final text = tester.widget<EditableText>(field).controller.text;
+    await tester.enterText(field, text + d);
     await tester.pump();
   }
 }

@@ -50,11 +50,16 @@ class QrCodeView extends StatelessWidget {
     required this.code,
     this.quietModules = 4,
     this.semanticLabel = 'QR-код для оплаты',
+    this.radius = 0,
   });
 
   final QrCode code;
   final int quietModules;
   final String semanticLabel;
+
+  /// Скругление белой плашки (в тёмной теме — как в Apple Wallet).
+  /// Углы попадают в тихую зону, на сканирование не влияют.
+  final double radius;
 
   @override
   Widget build(BuildContext context) {
@@ -68,8 +73,11 @@ class QrCodeView extends StatelessWidget {
           child: Container(
             width: side,
             height: side,
-            color: Colors.white,
             padding: EdgeInsets.all(module * quietModules),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(radius),
+            ),
             child: CustomPaint(
               size: Size.square(module * code.moduleCount),
               painter: QrPainter.withQr(
@@ -94,7 +102,9 @@ class QrCodeView extends StatelessWidget {
 
 /// Серый макет QR, пока строка с бэка не пришла.
 class QrPlaceholder extends StatelessWidget {
-  const QrPlaceholder({super.key});
+  const QrPlaceholder({super.key, this.radius = 0});
+
+  final double radius;
 
   static const _fill = Color(0xFFE4E4DF);
   static const _eye = Color(0xFFC9CAC5);
@@ -113,7 +123,10 @@ class QrPlaceholder extends StatelessWidget {
         return Container(
           width: side,
           height: side,
-          color: Colors.white,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(radius),
+          ),
           child: Stack(
             children: [
               Positioned(
