@@ -204,6 +204,87 @@ class AppLocalizationsRu extends AppLocalizations {
   String get historyNoDate => 'Без даты';
 
   @override
+  String get historyEmptyPeriod => 'За этот период операций нет.';
+
+  @override
+  String get periodAll => 'Всё время';
+
+  @override
+  String get periodToday => 'Сегодня';
+
+  @override
+  String get periodYesterday => 'Вчера';
+
+  @override
+  String get periodWeek => '7 дней';
+
+  @override
+  String get periodMonth => 'Этот месяц';
+
+  @override
+  String get periodLastMonth => 'Прошлый месяц';
+
+  @override
+  String get periodCustom => 'Период…';
+
+  @override
+  String get periodPickTitle => 'Период истории';
+
+  @override
+  String get reportExport => 'Отчёт в PDF';
+
+  @override
+  String get reportPreparing => 'Готовим отчёт…';
+
+  @override
+  String get reportPickTitle => 'Период отчёта';
+
+  @override
+  String get reportTooLong =>
+      'Отчёт — не больше чем за год. Выберите период короче.';
+
+  @override
+  String get reportTitle => 'Отчёт по операциям';
+
+  @override
+  String get reportPeriod => 'Период';
+
+  @override
+  String get reportGenerated => 'Сформирован';
+
+  @override
+  String get reportPaid => 'Оплачено';
+
+  @override
+  String get reportDeclined => 'Отклонено';
+
+  @override
+  String get reportRefunded => 'Возвраты';
+
+  @override
+  String reportOperations(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count операций',
+      few: '$count операции',
+      one: '$count операция',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reportEmpty => 'За этот период операций нет.';
+
+  @override
+  String get reportNumber => '№';
+
+  @override
+  String reportPage(int page, int total) {
+    return 'Стр. $page из $total';
+  }
+
+  @override
   String get paymentDate => 'Дата';
 
   @override

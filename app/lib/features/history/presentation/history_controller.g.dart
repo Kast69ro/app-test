@@ -8,6 +8,65 @@ part of 'history_controller.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// Выбранный период истории. Сменили — история грузится заново.
+
+@ProviderFor(HistoryPeriodController)
+final historyPeriodControllerProvider = HistoryPeriodControllerProvider._();
+
+/// Выбранный период истории. Сменили — история грузится заново.
+final class HistoryPeriodControllerProvider
+    extends $NotifierProvider<HistoryPeriodController, HistoryPeriod> {
+  /// Выбранный период истории. Сменили — история грузится заново.
+  HistoryPeriodControllerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'historyPeriodControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$historyPeriodControllerHash();
+
+  @$internal
+  @override
+  HistoryPeriodController create() => HistoryPeriodController();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(HistoryPeriod value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<HistoryPeriod>(value),
+    );
+  }
+}
+
+String _$historyPeriodControllerHash() =>
+    r'710cd14091c4bd5d2ef9d604d55d9083ca163fbb';
+
+/// Выбранный период истории. Сменили — история грузится заново.
+
+abstract class _$HistoryPeriodController extends $Notifier<HistoryPeriod> {
+  HistoryPeriod build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<HistoryPeriod, HistoryPeriod>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<HistoryPeriod, HistoryPeriod>,
+              HistoryPeriod,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}
+
 /// История операций: первая страница + «Показать ещё».
 ///
 /// Ошибка обновления не стирает список: Riverpod хранит прошлое значение
@@ -45,7 +104,7 @@ final class HistoryControllerProvider
   HistoryController create() => HistoryController();
 }
 
-String _$historyControllerHash() => r'8c67bbe19afcfddcfa1848847c2f4429a4602743';
+String _$historyControllerHash() => r'ff171c96b1cdd0cdd39f627c0c52c4e149d838a3';
 
 /// История операций: первая страница + «Показать ещё».
 ///

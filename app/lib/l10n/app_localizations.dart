@@ -448,6 +448,144 @@ abstract class AppLocalizations {
   /// **'Без даты'**
   String get historyNoDate;
 
+  /// No description provided for @historyEmptyPeriod.
+  ///
+  /// In ru, this message translates to:
+  /// **'За этот период операций нет.'**
+  String get historyEmptyPeriod;
+
+  /// No description provided for @periodAll.
+  ///
+  /// In ru, this message translates to:
+  /// **'Всё время'**
+  String get periodAll;
+
+  /// No description provided for @periodToday.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сегодня'**
+  String get periodToday;
+
+  /// No description provided for @periodYesterday.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вчера'**
+  String get periodYesterday;
+
+  /// No description provided for @periodWeek.
+  ///
+  /// In ru, this message translates to:
+  /// **'7 дней'**
+  String get periodWeek;
+
+  /// No description provided for @periodMonth.
+  ///
+  /// In ru, this message translates to:
+  /// **'Этот месяц'**
+  String get periodMonth;
+
+  /// No description provided for @periodLastMonth.
+  ///
+  /// In ru, this message translates to:
+  /// **'Прошлый месяц'**
+  String get periodLastMonth;
+
+  /// No description provided for @periodCustom.
+  ///
+  /// In ru, this message translates to:
+  /// **'Период…'**
+  String get periodCustom;
+
+  /// No description provided for @periodPickTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Период истории'**
+  String get periodPickTitle;
+
+  /// No description provided for @reportExport.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отчёт в PDF'**
+  String get reportExport;
+
+  /// No description provided for @reportPreparing.
+  ///
+  /// In ru, this message translates to:
+  /// **'Готовим отчёт…'**
+  String get reportPreparing;
+
+  /// No description provided for @reportPickTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Период отчёта'**
+  String get reportPickTitle;
+
+  /// No description provided for @reportTooLong.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отчёт — не больше чем за год. Выберите период короче.'**
+  String get reportTooLong;
+
+  /// No description provided for @reportTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отчёт по операциям'**
+  String get reportTitle;
+
+  /// No description provided for @reportPeriod.
+  ///
+  /// In ru, this message translates to:
+  /// **'Период'**
+  String get reportPeriod;
+
+  /// No description provided for @reportGenerated.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сформирован'**
+  String get reportGenerated;
+
+  /// No description provided for @reportPaid.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оплачено'**
+  String get reportPaid;
+
+  /// No description provided for @reportDeclined.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отклонено'**
+  String get reportDeclined;
+
+  /// No description provided for @reportRefunded.
+  ///
+  /// In ru, this message translates to:
+  /// **'Возвраты'**
+  String get reportRefunded;
+
+  /// No description provided for @reportOperations.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{{count} операция} few{{count} операции} other{{count} операций}}'**
+  String reportOperations(int count);
+
+  /// No description provided for @reportEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'За этот период операций нет.'**
+  String get reportEmpty;
+
+  /// No description provided for @reportNumber.
+  ///
+  /// In ru, this message translates to:
+  /// **'№'**
+  String get reportNumber;
+
+  /// No description provided for @reportPage.
+  ///
+  /// In ru, this message translates to:
+  /// **'Стр. {page} из {total}'**
+  String reportPage(int page, int total);
+
   /// No description provided for @paymentDate.
   ///
   /// In ru, this message translates to:

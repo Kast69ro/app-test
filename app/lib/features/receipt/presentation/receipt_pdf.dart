@@ -5,9 +5,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimens.dart';
-import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/date_format.dart';
 import '../../../core/utils/money_format.dart';
+import '../../../core/utils/pdf_kit.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../payment/presentation/payment_status_style.dart';
 import '../domain/receipt.dart';
@@ -30,10 +30,10 @@ class ReceiptPdf {
   /// Обычно `rootBundle.load`; в тестах — подмена.
   final Future<ByteData> Function(String path) _loadAsset;
 
-  _Fonts? _fonts;
+  PdfFonts? _fonts;
 
   Future<Uint8List> build(Receipt receipt, AppLocalizations l) async {
-    final f = _fonts ??= await _Fonts.load(_loadAsset);
+    final f = _fonts ??= (await PdfFontData.load(_loadAsset)).toFonts();
     final p = receipt.payment;
     final at = p.createdAt;
     final status = PaymentStatusStyle.of(p.status, l, _colors);
@@ -141,7 +141,7 @@ class ReceiptPdf {
   }
 
   /// Подпись — не шире половины строки, значение — справа.
-  pw.Widget _row(String label, String value, _Fonts f) => pw.LayoutBuilder(
+  pw.Widget _row(String label, String value, PdfFonts f) => pw.LayoutBuilder(
     builder: (_, constraints) => pw.Row(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
@@ -179,32 +179,7 @@ class ReceiptPdf {
     borderRadius: pw.BorderRadius.circular(AppDimens.radiusRow),
   );
 
-  /// Цвета берём из темы приложения, чтобы не дублировать их здесь.
-  static PdfColor _c(Color color) => PdfColor.fromInt(color.toARGB32());
-}
-
-/// Montserrat из ассетов приложения — тот же, что в интерфейсе.
-class _Fonts {
-  _Fonts(this.regular, this.medium, this.semiBold, this.bold);
-
-  final pw.Font regular;
-  final pw.Font medium;
-  final pw.Font semiBold;
-  final pw.Font bold;
-
-  static Future<_Fonts> load(
-    Future<ByteData> Function(String) loadAsset,
-  ) async {
-    Future<pw.Font> font(String weight) async => pw.Font.ttf(
-      await loadAsset('assets/fonts/${AppFonts.brand}-$weight.ttf'),
-    );
-    return _Fonts(
-      await font('Regular'),
-      await font('Medium'),
-      await font('SemiBold'),
-      await font('Bold'),
-    );
-  }
+  static PdfColor _c(Color color) => pdfColor(color);
 }
 
 /// keepAlive: шрифты разбираются один раз за сессию, а не на каждый чек.

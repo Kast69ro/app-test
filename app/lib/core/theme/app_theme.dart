@@ -38,6 +38,14 @@ abstract final class AppTheme {
       ),
       progressIndicatorTheme: ProgressIndicatorThemeData(color: c.accent),
       dialogTheme: DialogThemeData(backgroundColor: c.surface),
+      // Календарь периода в истории. В шапке «Дата начала» у Flutter
+      // не сжимается — со стандартными 24 px и крупным шрифтом вылезает.
+      datePickerTheme: const DatePickerThemeData(
+        rangePickerHeaderHeadlineStyle: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
     );
   }
 

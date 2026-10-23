@@ -13,14 +13,88 @@ import '../../../core/widgets/pressable_card.dart';
 import '../../../core/widgets/retry_banner.dart';
 import '../../../l10n/app_localizations.dart';
 import '../domain/history_feed.dart';
+import '../domain/history_period.dart';
 import 'history_controller.dart';
+import 'history_export_controller.dart';
 import 'widgets/history_row.dart';
+import 'widgets/period_chips.dart';
+import 'widgets/report_button.dart';
 
 /// История операций. Прототип: `POS Terminal.dc.html`, стр. 77–111.
-class HistoryScreen extends ConsumerWidget {
+/// Сверх прототипа — фильтр по периоду и отчёт в PDF.
+class HistoryScreen extends ConsumerStatefulWidget {
   const HistoryScreen({super.key});
 
-  Future<void> _refresh(WidgetRef ref) async {
+  @override
+  ConsumerState<HistoryScreen> createState() => _HistoryScreenState();
+}
+
+class _HistoryScreenState extends ConsumerState<HistoryScreen> {
+  final _reportKey = GlobalKey();
+
+  HistoryPeriodController get _period =>
+      ref.read(historyPeriodControllerProvider.notifier);
+
+  /// Системный календарь «с — по». `null` — закрыли без выбора.
+  ///
+  /// Открываем всегда с готовым периодом (по умолчанию — этот месяц):
+  /// в шапке тогда короткие даты, а не длинное «Дата начала – Дата
+  /// окончания», которое с крупным шрифтом не влезает.
+  Future<DateRange?> _pickRange(String title, DateRange? initial) async {
+    final now = DateTime.now();
+    final start = initial ?? const HistoryPeriod(PeriodKind.month).range(now)!;
+    final picked = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2020),
+      lastDate: dayKey(now),
+      initialDateRange: DateTimeRange(start: start.from, end: start.to),
+      helpText: title,
+      // Шапка календаря не рассчитана на очень крупный шрифт.
+      builder: (context, child) =>
+          MediaQuery.withClampedTextScaling(maxScaleFactor: 1.3, child: child!),
+    );
+    return picked == null ? null : DateRange(picked.start, picked.end);
+  }
+
+  Future<void> _pickCustom() async {
+    final l = AppLocalizations.of(context);
+    final current = ref
+        .read(historyPeriodControllerProvider)
+        .range(DateTime.now());
+    final range = await _pickRange(l.periodPickTitle, current);
+    if (range != null && mounted) _period.select(HistoryPeriod.custom(range));
+  }
+
+  /// За «Всё время» отчёт не делаем — сначала спросим период.
+  Future<void> _exportReport() async {
+    final l = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    var range = ref.read(historyPeriodControllerProvider).range(DateTime.now());
+    if (range == null) {
+      range = await _pickRange(l.reportPickTitle, null);
+      if (range == null || !mounted) return;
+      _period.select(HistoryPeriod.custom(range));
+    }
+    if (range.days > maxReportDays) {
+      messenger.showSnackBar(SnackBar(content: Text(l.reportTooLong)));
+      return;
+    }
+
+    // iPad открывает окно «Поделиться» стрелкой от кнопки.
+    final button = _reportKey.currentContext?.findRenderObject() as RenderBox?;
+    final origin = button == null
+        ? null
+        : button.localToGlobal(Offset.zero) & button.size;
+    try {
+      await ref
+          .read(historyExportControllerProvider.notifier)
+          .export(range, l, origin: origin);
+    } catch (e) {
+      messenger.showSnackBar(SnackBar(content: Text(apiErrorText(e, l))));
+    }
+  }
+
+  Future<void> _refresh() async {
     ref.invalidate(historyControllerProvider);
     try {
       await ref.read(historyControllerProvider.future);
@@ -30,8 +104,10 @@ class HistoryScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    final period = ref.watch(historyPeriodControllerProvider);
+    final exporting = ref.watch(historyExportControllerProvider);
     final history = ref.watch(historyControllerProvider);
     final data = history.value;
     final error = history.hasError && !history.isLoading ? history.error : null;
@@ -48,18 +124,40 @@ class HistoryScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
+              // Справа меньше: у кнопки своя зона нажатия 48 px.
               padding: const EdgeInsets.fromLTRB(
                 AppDimens.screenPadding,
-                18,
-                AppDimens.screenPadding,
-                8,
+                10,
+                AppDimens.screenPadding - 12,
+                0,
               ),
-              child: Text(l.tabHistory, style: AppTextStyles.tabTitle),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(l.tabHistory, style: AppTextStyles.tabTitle),
+                  ),
+                  ReportButton(
+                    key: _reportKey,
+                    busy: exporting,
+                    onTap: _exportReport,
+                  ),
+                ],
+              ),
             ),
+            const SizedBox(height: 4),
+            PeriodChips(
+              selected: period.kind,
+              customLabel: period.custom == null
+                  ? null
+                  : formatRangeShort(period.custom!, now),
+              onSelect: (kind) => _period.select(HistoryPeriod(kind)),
+              onCustom: _pickCustom,
+            ),
+            const SizedBox(height: 6),
             Expanded(
               child: RefreshIndicator(
                 color: context.colors.accent,
-                onRefresh: () => _refresh(ref),
+                onRefresh: _refresh,
                 child: ListView(
                   // Тянуть вниз можно и при пустом списке.
                   physics: const AlwaysScrollableScrollPhysics(),
@@ -74,7 +172,7 @@ class HistoryScreen extends ConsumerWidget {
                       RetryBanner(
                         text: apiErrorText(error, l),
                         retryLabel: l.retry,
-                        onRetry: () => _refresh(ref),
+                        onRetry: _refresh,
                       ),
                       const SizedBox(height: 14),
                     ],
@@ -91,7 +189,9 @@ class HistoryScreen extends ConsumerWidget {
                           vertical: 40,
                         ),
                         child: Text(
-                          l.historyEmpty,
+                          period.kind == PeriodKind.all
+                              ? l.historyEmpty
+                              : l.historyEmptyPeriod,
                           style: TextStyle(
                             fontSize: 15,
                             height: 1.5,

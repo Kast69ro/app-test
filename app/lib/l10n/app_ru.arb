@@ -103,6 +103,40 @@
   },
   "historyLoadingMore": "Загружаем…",
   "historyNoDate": "Без даты",
+  "historyEmptyPeriod": "За этот период операций нет.",
+  "periodAll": "Всё время",
+  "periodToday": "Сегодня",
+  "periodYesterday": "Вчера",
+  "periodWeek": "7 дней",
+  "periodMonth": "Этот месяц",
+  "periodLastMonth": "Прошлый месяц",
+  "periodCustom": "Период…",
+  "periodPickTitle": "Период истории",
+  "reportExport": "Отчёт в PDF",
+  "reportPreparing": "Готовим отчёт…",
+  "reportPickTitle": "Период отчёта",
+  "reportTooLong": "Отчёт — не больше чем за год. Выберите период короче.",
+  "reportTitle": "Отчёт по операциям",
+  "reportPeriod": "Период",
+  "reportGenerated": "Сформирован",
+  "reportPaid": "Оплачено",
+  "reportDeclined": "Отклонено",
+  "reportRefunded": "Возвраты",
+  "reportOperations": "{count, plural, one{{count} операция} few{{count} операции} other{{count} операций}}",
+  "@reportOperations": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "reportEmpty": "За этот период операций нет.",
+  "reportNumber": "№",
+  "reportPage": "Стр. {page} из {total}",
+  "@reportPage": {
+    "placeholders": {
+      "page": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
   "paymentDate": "Дата",
   "paymentTime": "Время",
   "paymentBank": "Банк-отправитель",

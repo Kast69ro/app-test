@@ -6,6 +6,9 @@ abstract final class ApiPaths {
   static const summary = '/pos/summary';
   static const history = '/pos/history';
 
-  /// Размер страницы истории (максимум на бэке — 200).
+  /// Размер страницы истории.
   static const historyPageSize = 50;
+
+  /// Максимум `limit` на бэке — им выкачиваем период для отчёта.
+  static const historyMaxPageSize = 200;
 }

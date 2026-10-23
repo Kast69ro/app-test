@@ -1,5 +1,6 @@
 import 'package:activbank_qr/core/api/api_exception.dart';
 import 'package:activbank_qr/features/history/data/history_repository.dart';
+import 'package:activbank_qr/features/history/domain/history_period.dart';
 import 'package:activbank_qr/features/payment/domain/payment.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -100,6 +101,106 @@ void main() {
           ),
         ),
       );
+    });
+  });
+
+  group('HistoryRepository: период', () {
+    Map<String, Object?> empty(_) => {'total': 0, 'payments': []};
+
+    test('один день — параметр date', () async {
+      final t = fakeApi((o) async => jsonBody(200, empty(o)));
+      final day = DateTime(2026, 10, 23);
+      await HistoryRepository(t.client)
+          .getPage(offset: 0, range: DateRange(day, day));
+      expect(t.adapter.last!.queryParameters, {
+        'date': '2026-10-23',
+        'limit': 50,
+        'offset': 0,
+      });
+    });
+
+    test('период — from и to, без date', () async {
+      final t = fakeApi((o) async => jsonBody(200, empty(o)));
+      await HistoryRepository(t.client).getPage(
+        offset: 50,
+        range: DateRange(DateTime(2026, 9, 10), DateTime(2026, 10, 10)),
+      );
+      expect(t.adapter.last!.queryParameters, {
+        'from': '2026-09-10',
+        'to': '2026-10-10',
+        'limit': 50,
+        'offset': 50,
+      });
+    });
+  });
+
+  group('HistoryRepository.getAll', () {
+    final range = DateRange(DateTime(2026, 9, 1), DateTime(2026, 9, 30));
+
+    Map<String, Object?> pay(int i) => {
+      'sender': 'Банк $i',
+      'amount': i,
+      'status': 'success',
+      'creation_datetime': '2026-09-08T14:12:00',
+    };
+
+    test('выкачивает все страницы по 200', () async {
+      final all = [for (var i = 0; i < 450; i++) pay(i)];
+      final queries = <Map<String, dynamic>>[];
+      final t = fakeApi((o) async {
+        queries.add(o.queryParameters);
+        final offset = o.queryParameters['offset'] as int;
+        final limit = o.queryParameters['limit'] as int;
+        return jsonBody(200, {
+          'total': all.length,
+          'payments': all.skip(offset).take(limit).toList(),
+        });
+      });
+
+      final payments = await HistoryRepository(t.client).getAll(range);
+
+      expect(payments, hasLength(450));
+      expect(payments.last.sender, 'Банк 449');
+      expect([for (final q in queries) q['offset']], [0, 200, 400]);
+      expect(queries.every((q) => q['limit'] == 200), isTrue);
+      expect(queries.first['from'], '2026-09-01');
+      expect(queries.first['to'], '2026-09-30');
+    });
+
+    test('новый платёж во время выгрузки — без дублей', () async {
+      var all = [for (var i = 1; i <= 300; i++) pay(i)];
+      var calls = 0;
+      final t = fakeApi((o) async {
+        // После первой страницы в начало пришёл новый платёж.
+        if (calls++ == 1) all = [pay(0), ...all];
+        final offset = o.queryParameters['offset'] as int;
+        return jsonBody(200, {
+          'total': all.length,
+          'payments': all.skip(offset).take(200).toList(),
+        });
+      });
+
+      final payments = await HistoryRepository(t.client).getAll(range);
+
+      expect(payments, hasLength(300));
+      expect(payments.map((p) => p.sender).toSet(), hasLength(300));
+    });
+
+    test('бэк обещал ещё, но прислал пусто — не зацикливается', () async {
+      var calls = 0;
+      final t = fakeApi((o) async {
+        calls++;
+        final first = o.queryParameters['offset'] == 0;
+        return jsonBody(200, {
+          'total': 500,
+          'payments': first ? [pay(1)] : [],
+        });
+      });
+
+      final payments = await HistoryRepository(t.client).getAll(range);
+
+      expect(payments, hasLength(1));
+      expect(calls, 2);
     });
   });
 }

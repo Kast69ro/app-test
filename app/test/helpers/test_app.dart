@@ -27,8 +27,12 @@ class FakeBackend {
   List<Map<String, Object?>> history = [];
   final requests = <String>[];
 
+  /// Параметры запросов `/pos/history` — проверять фильтр периода.
+  final historyQueries = <Map<String, dynamic>>[];
+
   Future<ResponseBody> respond(RequestOptions o) async {
     requests.add(o.path);
+    if (o.path == '/pos/history') historyQueries.add(o.queryParameters);
     switch (o.path) {
       case '/pos/otp/request':
         return jsonBody(200, {'ok': true, 'expires_in': 300});
