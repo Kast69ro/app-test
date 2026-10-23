@@ -6,6 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/api/api_exception.dart';
 import '../../../core/utils/phone_format.dart';
 import '../data/auth_repository.dart';
+import '../data/sms_code_reader.dart';
 import '../domain/login_failure.dart';
 import 'session_controller.dart';
 
@@ -44,9 +45,20 @@ abstract class LoginState with _$LoginState {
 class LoginController extends _$LoginController {
   Timer? _resendTimer;
 
+  late SmsCodeReader _sms;
+  bool _smsWaiting = false;
+
+  /// Номер текущего ожидания SMS: ответ от старого ожидания
+  /// (после «Сменить номер» или повторной отправки) не подставляем.
+  int _smsWait = 0;
+
   @override
   LoginState build() {
-    ref.onDispose(() => _resendTimer?.cancel());
+    _sms = ref.watch(smsCodeReaderProvider);
+    ref.onDispose(() {
+      _resendTimer?.cancel();
+      _stopSmsWait();
+    });
     return const LoginState();
   }
 
@@ -97,6 +109,7 @@ class LoginController extends _$LoginController {
         codeExpiresIn: expiresIn,
       );
       _startResendTimer();
+      unawaited(_waitForSms());
     } on ApiException catch (e) {
       if (!ref.mounted) return;
       state = state.copyWith(
@@ -134,12 +147,37 @@ class LoginController extends _$LoginController {
   void backToPhone() {
     if (state.loading) return;
     _resendTimer?.cancel();
+    _stopSmsWait();
     state = state.copyWith(
       step: LoginStep.phone,
       code: '',
       failure: null,
       resendIn: 0,
     );
+  }
+
+  /// Android спросит «Разрешить прочитать SMS?» — код подставится
+  /// и уйдёт сам, как будто его набрали.
+  Future<void> _waitForSms() async {
+    if (_smsWaiting) await _sms.cancel();
+    _smsWaiting = true;
+    final wait = ++_smsWait;
+    final code = await _sms.listen(otpLength);
+    if (wait != _smsWait) return;
+    _smsWaiting = false;
+    if (!ref.mounted || code == null) return;
+    if (state.step != LoginStep.code || state.loading) return;
+    state = state.copyWith(code: '');
+    for (final digit in code.split('')) {
+      key(digit);
+    }
+  }
+
+  void _stopSmsWait() {
+    if (!_smsWaiting) return;
+    _smsWaiting = false;
+    _smsWait++;
+    unawaited(_sms.cancel());
   }
 
   void _startResendTimer() {

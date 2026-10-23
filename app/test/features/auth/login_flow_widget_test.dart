@@ -33,6 +33,42 @@ void main() {
     expect(find.text('Магазин на Рудаки'), findsOneWidget);
   });
 
+  testWidgets('код из SMS подставляется и уходит сам', (tester) async {
+    final sms = FakeSmsCodeReader();
+    final backend = FakeBackend();
+    await pumpTestApp(tester, backend, sms: sms);
+
+    await typeDigits(tester, '931234567');
+    expect(sms.listening, isFalse);
+    await tester.tap(find.text('Получить код'));
+    await tester.pumpAndSettle(const Duration(milliseconds: 100));
+    expect(sms.listening, isTrue);
+
+    sms.deliver('123456');
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pumpAndSettle();
+
+    expect(backend.requests, contains('/pos/otp/verify'));
+    expect(find.text('Создайте код входа'), findsOneWidget);
+  });
+
+  testWidgets('«Изменить номер» перестаёт ждать SMS', (tester) async {
+    final sms = FakeSmsCodeReader();
+    final backend = FakeBackend();
+    await pumpTestApp(tester, backend, sms: sms);
+
+    await typeDigits(tester, '931234567');
+    await tester.tap(find.text('Получить код'));
+    await tester.pumpAndSettle(const Duration(milliseconds: 100));
+
+    await tester.tap(find.text('Изменить номер'));
+    await tester.pumpAndSettle();
+    expect(sms.cancels, 1);
+    expect(sms.listening, isFalse);
+    expect(backend.requests, isNot(contains('/pos/otp/verify')));
+    expect(find.text('Вход для мерчантов'), findsOneWidget);
+  });
+
   testWidgets('неверный SMS-код показывает detail с бэка', (tester) async {
     await pumpTestApp(tester, FakeBackend()..verifyStatus = 400);
 

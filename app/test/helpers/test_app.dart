@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:activbank_qr/app/app.dart';
 import 'package:activbank_qr/app/bootstrap.dart';
 import 'package:activbank_qr/core/api/api_providers.dart';
 import 'package:activbank_qr/core/security/pin_hasher.dart';
 import 'package:activbank_qr/core/storage/preferences.dart';
 import 'package:activbank_qr/core/storage/secure_store.dart';
+import 'package:activbank_qr/features/auth/data/sms_code_reader.dart';
 import 'package:activbank_qr/features/pin/data/pin_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -81,6 +84,33 @@ class FakeBackend {
   }
 }
 
+/// SMS «приходит», когда тест вызовет [deliver].
+class FakeSmsCodeReader implements SmsCodeReader {
+  Completer<String?>? _pending;
+  int listens = 0;
+  int cancels = 0;
+
+  bool get listening => _pending != null;
+
+  @override
+  Future<String?> listen(int length) {
+    listens++;
+    return (_pending = Completer<String?>()).future;
+  }
+
+  @override
+  Future<void> cancel() async {
+    cancels++;
+    _pending?.complete(null);
+    _pending = null;
+  }
+
+  void deliver(String? code) {
+    _pending?.complete(code);
+    _pending = null;
+  }
+}
+
 /// Приложение с памятью вместо хранилища и ненастоящим бэком.
 /// По умолчанию — маленький экран (320×568) и шрифт 1,3×.
 /// [prefs] — обычные настройки (тема); `null` — оставить прежние,
@@ -91,6 +121,7 @@ Future<MemorySecureStore> pumpTestApp(
   MemorySecureStore? store,
   Size size = const Size(320, 568),
   double textScale = 1.3,
+  FakeSmsCodeReader? sms,
   List<Override> overrides = const [],
   Map<String, Object>? prefs = const {},
 }) async {
@@ -111,6 +142,7 @@ Future<MemorySecureStore> pumpTestApp(
       overrides: [
         secureStoreProvider.overrideWithValue(mem),
         preferencesProvider.overrideWithValue(sharedPrefs),
+        smsCodeReaderProvider.overrideWithValue(sms ?? FakeSmsCodeReader()),
         pinRepositoryProvider.overrideWithValue(
           PinRepository(mem, hasher: const PinHasher(iterations: 10)),
         ),
