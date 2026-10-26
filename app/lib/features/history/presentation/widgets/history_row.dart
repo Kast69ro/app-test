@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
@@ -9,24 +10,28 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../payment/domain/payment.dart';
 import '../../../payment/presentation/payment_status_style.dart';
 import '../../../payment/presentation/widgets/status_chip.dart';
+import '../../../refund/presentation/refund_providers.dart';
 
 /// Строка операции в истории. Прототип: стр. 94–103.
 ///
 /// Слева полоса 3 px цвета статуса. В Flutter рамку разной толщины
 /// со скруглением нарисовать нельзя, поэтому собираем из слоёв:
 /// серая подложка (рамка 1 px) → полоса слева → белая карточка.
-class HistoryRow extends StatelessWidget {
+class HistoryRow extends ConsumerWidget {
   const HistoryRow({super.key, required this.payment, this.onTap});
 
   final Payment payment;
   final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
-    final p = payment;
+    // С учётом возвратов с телефона (концепт).
+    final p = ref.watch(effectivePaymentProvider(payment));
     final status = PaymentStatusStyle.of(p.status, l, context.colors);
-    final success = p.status == PaymentStatus.success;
+    final success =
+        p.status == PaymentStatus.success ||
+        p.status == PaymentStatus.partiallyRefunded;
     final time = p.createdAt == null ? '' : formatTime(p.createdAt!);
 
     return MergeSemantics(

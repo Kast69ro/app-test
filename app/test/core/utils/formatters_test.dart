@@ -32,6 +32,39 @@ void main() {
     });
   });
 
+  group('суммы в дирамах', () {
+    test('toCents без ошибки double', () {
+      expect(toCents(0.1 + 0.2), 30);
+      expect(toCents(19.99), 1999);
+      expect(toCents(150), 15000);
+    });
+
+    test('parseMoney: запятая, точка, пробелы', () {
+      expect(parseMoney('150'), 15000);
+      expect(parseMoney('150,5'), 15050);
+      expect(parseMoney('150.05'), 15005);
+      expect(parseMoney(' 1 234,50 '), 123450);
+      expect(parseMoney('1${nbsp}234,50'), 123450);
+      expect(parseMoney('12,'), 1200);
+      expect(parseMoney('0'), 0);
+    });
+
+    test('parseMoney: не сумма → null', () {
+      expect(parseMoney(''), isNull);
+      expect(parseMoney(','), isNull);
+      expect(parseMoney('1,234'), isNull); // три знака после запятой
+      expect(parseMoney('1,2,3'), isNull);
+      expect(parseMoney('-5'), isNull);
+      expect(parseMoney('abc'), isNull);
+    });
+
+    test('formatMoneyInput — для поля, без пробелов', () {
+      expect(formatMoneyInput(123450), '1234,50');
+      expect(formatMoneyInput(5), '0,05');
+      expect(parseMoney(formatMoneyInput(99999)), 99999);
+    });
+  });
+
   group('plural', () {
     test('склонение', () {
       expect(paymentsCount(0), '0 платежей');

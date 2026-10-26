@@ -118,4 +118,25 @@ void main() {
     expect(report.refunded.count, 2);
     expect(report.refunded.amount, 12);
   });
+
+  test('частичный возврат: платёж — в оплаченных, возврат — по его сумме', () {
+    const paid = Payment(
+      sender: 'Б',
+      amount: 100,
+      status: PaymentStatus.success,
+      createdAt: null,
+    );
+    final report = HistoryReport(
+      range: DateRange(now, now),
+      payments: [paid.withRefund(3010), paid.withRefund(10000)],
+      storeName: '',
+      terminalName: '',
+      terminalId: '',
+      generatedAt: now,
+    );
+    expect(report.success.count, 1);
+    expect(report.success.amount, 100);
+    expect(report.refunded.count, 2);
+    expect(report.refunded.amount, 130.1);
+  });
 }

@@ -42,6 +42,12 @@ class PaymentStatusStyle {
       c.refundFg,
       c.refundDot,
     ),
+    PaymentStatus.partiallyRefunded => PaymentStatusStyle(
+      l.statusPartiallyRefunded,
+      c.refundBg,
+      c.refundFg,
+      c.refundDot,
+    ),
     PaymentStatus.refundPending => PaymentStatusStyle(
       l.statusRefundPending,
       c.pendingBg,

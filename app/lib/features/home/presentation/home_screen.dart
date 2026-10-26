@@ -49,7 +49,7 @@ class HomeScreen extends ConsumerWidget {
     final merchant = (session?.storeName.isNotEmpty ?? false)
         ? session!.storeName
         : '—';
-    final refunded = summary?.refunded;
+    final refunded = ref.watch(todayRefundsProvider);
 
     return Scaffold(
       backgroundColor: context.colors.background,
@@ -106,7 +106,7 @@ class HomeScreen extends ConsumerWidget {
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      // Пока бэк не отдаёт блок `refunded` — прочерк.
+                      // Нет блока `refunded` и возвратов с телефона — прочерк.
                       // Отклонённые (`cancel`) сюда не подставляем: это не возвраты.
                       child: StatTile(
                         label: l.homeTodayRefund,

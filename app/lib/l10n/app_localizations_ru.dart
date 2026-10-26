@@ -183,6 +183,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get statusRefunded => 'Возврат';
 
   @override
+  String get statusPartiallyRefunded => 'Частичный возврат';
+
+  @override
   String get statusRefundPending => 'Возврат в обработке';
 
   @override
@@ -304,6 +307,81 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get paymentRefund => 'Возврат платежа';
+
+  @override
+  String get paymentRefundAgain => 'Вернуть ещё';
+
+  @override
+  String get paymentRefunded => 'Возвращено';
+
+  @override
+  String get paymentRefundable => 'Доступно к возврату';
+
+  @override
+  String paymentTrailRefund(String amount) {
+    return 'Возврат $amount';
+  }
+
+  @override
+  String get refundTitle => 'Возврат платежа';
+
+  @override
+  String get refundPaid => 'Сумма платежа';
+
+  @override
+  String get refundAmountLabel => 'Сумма возврата';
+
+  @override
+  String get refundAll => 'Вся сумма';
+
+  @override
+  String refundAmountTooMuch(String max) {
+    return 'Не больше $max';
+  }
+
+  @override
+  String get refundAmountInvalid => 'Введите сумму, например 150,50';
+
+  @override
+  String get refundReasonLabel => 'Причина (необязательно)';
+
+  @override
+  String get refundReasonHint => 'Например, клиент вернул товар';
+
+  @override
+  String refundSubmit(String amount) {
+    return 'Вернуть $amount';
+  }
+
+  @override
+  String get refundConceptNote =>
+      'Демонстрация: возврат сохраняется только на этом телефоне до перезапуска, деньги не списываются.';
+
+  @override
+  String get refundPinTitle => 'Подтвердите возврат';
+
+  @override
+  String refundPinSubtitle(String amount) {
+    return 'Введите код входа, чтобы вернуть $amount';
+  }
+
+  @override
+  String get refundSending => 'Оформляем возврат…';
+
+  @override
+  String get refundDoneTitle => 'Возврат оформлен';
+
+  @override
+  String refundDoneText(String amount, String bank) {
+    return '$amount вернётся клиенту на счёт в $bank.';
+  }
+
+  @override
+  String get refundDonePending =>
+      'Банк обрабатывает возврат — статус обновится в истории.';
+
+  @override
+  String get refundDone => 'Готово';
 
   @override
   String get paymentShare => 'Поделиться чеком';

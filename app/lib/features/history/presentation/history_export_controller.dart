@@ -6,6 +6,7 @@ import '../../../core/utils/date_format.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../auth/presentation/session_controller.dart';
 import '../../receipt/data/receipt_sharer.dart';
+import '../../refund/data/refund_ledger.dart';
 import '../data/history_repository.dart';
 import '../domain/history_period.dart';
 import '../domain/history_report.dart';
@@ -31,7 +32,12 @@ class HistoryExportController extends _$HistoryExportController {
     if (state) return;
     state = true;
     try {
-      final payments = await ref.read(historyRepositoryProvider).getAll(range);
+      final ledger = ref.read(refundLedgerProvider.notifier);
+      final payments = [
+        // Возвраты с телефона (концепт) — тоже в отчёт.
+        for (final p in await ref.read(historyRepositoryProvider).getAll(range))
+          ledger.apply(p),
+      ];
       final session = ref.read(sessionControllerProvider).value?.session;
       final report = HistoryReport(
         range: range,

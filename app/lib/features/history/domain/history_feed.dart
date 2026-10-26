@@ -98,7 +98,11 @@ DayGroup _group(DateTime? day, List<Payment> list) {
   // Суммируем в дирамах, чтобы не копить ошибку double.
   var cents = 0;
   for (final p in list) {
-    if (p.status == PaymentStatus.success) cents += (p.amount * 100).round();
+    // Частично возвращённый — тоже оплата; возвраты считаются отдельно.
+    if (p.status == PaymentStatus.success ||
+        p.status == PaymentStatus.partiallyRefunded) {
+      cents += (p.amount * 100).round();
+    }
   }
   return DayGroup(
     day: day,

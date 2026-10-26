@@ -412,6 +412,12 @@ abstract class AppLocalizations {
   /// **'Возврат'**
   String get statusRefunded;
 
+  /// No description provided for @statusPartiallyRefunded.
+  ///
+  /// In ru, this message translates to:
+  /// **'Частичный возврат'**
+  String get statusPartiallyRefunded;
+
   /// No description provided for @statusRefundPending.
   ///
   /// In ru, this message translates to:
@@ -627,6 +633,132 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Возврат платежа'**
   String get paymentRefund;
+
+  /// No description provided for @paymentRefundAgain.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вернуть ещё'**
+  String get paymentRefundAgain;
+
+  /// No description provided for @paymentRefunded.
+  ///
+  /// In ru, this message translates to:
+  /// **'Возвращено'**
+  String get paymentRefunded;
+
+  /// No description provided for @paymentRefundable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Доступно к возврату'**
+  String get paymentRefundable;
+
+  /// No description provided for @paymentTrailRefund.
+  ///
+  /// In ru, this message translates to:
+  /// **'Возврат {amount}'**
+  String paymentTrailRefund(String amount);
+
+  /// No description provided for @refundTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Возврат платежа'**
+  String get refundTitle;
+
+  /// No description provided for @refundPaid.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма платежа'**
+  String get refundPaid;
+
+  /// No description provided for @refundAmountLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма возврата'**
+  String get refundAmountLabel;
+
+  /// No description provided for @refundAll.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вся сумма'**
+  String get refundAll;
+
+  /// No description provided for @refundAmountTooMuch.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не больше {max}'**
+  String refundAmountTooMuch(String max);
+
+  /// No description provided for @refundAmountInvalid.
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите сумму, например 150,50'**
+  String get refundAmountInvalid;
+
+  /// No description provided for @refundReasonLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Причина (необязательно)'**
+  String get refundReasonLabel;
+
+  /// No description provided for @refundReasonHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Например, клиент вернул товар'**
+  String get refundReasonHint;
+
+  /// No description provided for @refundSubmit.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вернуть {amount}'**
+  String refundSubmit(String amount);
+
+  /// No description provided for @refundConceptNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Демонстрация: возврат сохраняется только на этом телефоне до перезапуска, деньги не списываются.'**
+  String get refundConceptNote;
+
+  /// No description provided for @refundPinTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Подтвердите возврат'**
+  String get refundPinTitle;
+
+  /// No description provided for @refundPinSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите код входа, чтобы вернуть {amount}'**
+  String refundPinSubtitle(String amount);
+
+  /// No description provided for @refundSending.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оформляем возврат…'**
+  String get refundSending;
+
+  /// No description provided for @refundDoneTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Возврат оформлен'**
+  String get refundDoneTitle;
+
+  /// No description provided for @refundDoneText.
+  ///
+  /// In ru, this message translates to:
+  /// **'{amount} вернётся клиенту на счёт в {bank}.'**
+  String refundDoneText(String amount, String bank);
+
+  /// No description provided for @refundDonePending.
+  ///
+  /// In ru, this message translates to:
+  /// **'Банк обрабатывает возврат — статус обновится в истории.'**
+  String get refundDonePending;
+
+  /// No description provided for @refundDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Готово'**
+  String get refundDone;
 
   /// No description provided for @paymentShare.
   ///
