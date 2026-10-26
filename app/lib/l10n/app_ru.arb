@@ -92,6 +92,7 @@
   "statusCancel": "Отклонён",
   "statusPending": "Ожидание",
   "statusRefunded": "Возврат",
+  "statusPartiallyRefunded": "Частичный возврат",
   "statusRefundPending": "Возврат в обработке",
   "statusUnknown": "Неизвестно",
   "historyEmpty": "Пока нет операций. Потяните список вниз, чтобы обновить.",
@@ -144,6 +145,53 @@
   "paymentTrailCreated": "QR создан",
   "paymentTrailScanned": "Клиент отсканировал",
   "paymentRefund": "Возврат платежа",
+  "paymentRefundAgain": "Вернуть ещё",
+  "paymentRefunded": "Возвращено",
+  "paymentRefundable": "Доступно к возврату",
+  "paymentTrailRefund": "Возврат {amount}",
+  "@paymentTrailRefund": {
+    "placeholders": {
+      "amount": {"type": "String"}
+    }
+  },
+  "refundTitle": "Возврат платежа",
+  "refundPaid": "Сумма платежа",
+  "refundAmountLabel": "Сумма возврата",
+  "refundAll": "Вся сумма",
+  "refundAmountTooMuch": "Не больше {max}",
+  "@refundAmountTooMuch": {
+    "placeholders": {
+      "max": {"type": "String"}
+    }
+  },
+  "refundAmountInvalid": "Введите сумму, например 150,50",
+  "refundReasonLabel": "Причина (необязательно)",
+  "refundReasonHint": "Например, клиент вернул товар",
+  "refundSubmit": "Вернуть {amount}",
+  "@refundSubmit": {
+    "placeholders": {
+      "amount": {"type": "String"}
+    }
+  },
+  "refundConceptNote": "Демонстрация: возврат сохраняется только на этом телефоне до перезапуска, деньги не списываются.",
+  "refundPinTitle": "Подтвердите возврат",
+  "refundPinSubtitle": "Введите код входа, чтобы вернуть {amount}",
+  "@refundPinSubtitle": {
+    "placeholders": {
+      "amount": {"type": "String"}
+    }
+  },
+  "refundSending": "Оформляем возврат…",
+  "refundDoneTitle": "Возврат оформлен",
+  "refundDoneText": "{amount} вернётся клиенту на счёт в {bank}.",
+  "@refundDoneText": {
+    "placeholders": {
+      "amount": {"type": "String"},
+      "bank": {"type": "String"}
+    }
+  },
+  "refundDonePending": "Банк обрабатывает возврат — статус обновится в истории.",
+  "refundDone": "Готово",
   "paymentShare": "Поделиться чеком",
   "paymentSharing": "Готовим чек…",
   "paymentShareError": "Не удалось — повторить",

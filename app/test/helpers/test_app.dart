@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:activbank_qr/app/app.dart';
 import 'package:activbank_qr/app/bootstrap.dart';
+import 'package:activbank_qr/app/env.dart';
 import 'package:activbank_qr/core/api/api_providers.dart';
 import 'package:activbank_qr/core/security/pin_hasher.dart';
 import 'package:activbank_qr/core/storage/preferences.dart';
@@ -126,6 +127,7 @@ Future<MemorySecureStore> pumpTestApp(
   Size size = const Size(320, 568),
   double textScale = 1.3,
   FakeSmsCodeReader? sms,
+  Env env = Env.dev,
   List<Override> overrides = const [],
   Map<String, Object>? prefs = const {},
 }) async {
@@ -144,6 +146,8 @@ Future<MemorySecureStore> pumpTestApp(
       key: UniqueKey(),
       retry: noRetry,
       overrides: [
+        // По умолчанию как dev-сборка: возвраты — концепт.
+        envProvider.overrideWithValue(env),
         secureStoreProvider.overrideWithValue(mem),
         preferencesProvider.overrideWithValue(sharedPrefs),
         smsCodeReaderProvider.overrideWithValue(sms ?? FakeSmsCodeReader()),

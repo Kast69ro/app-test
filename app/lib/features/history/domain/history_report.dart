@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../../../core/utils/money_format.dart';
 import '../../payment/domain/payment.dart';
 import 'history_period.dart';
 
@@ -22,12 +23,12 @@ class HistoryReport {
     required this.terminalName,
     required this.terminalId,
     required this.generatedAt,
-  }) : success = _total(payments, {PaymentStatus.success}),
+  }) : success = _total(payments, {
+         PaymentStatus.success,
+         PaymentStatus.partiallyRefunded,
+       }),
        cancel = _total(payments, {PaymentStatus.cancel}),
-       refunded = _total(payments, {
-         PaymentStatus.refunded,
-         PaymentStatus.refundPending,
-       });
+       refunded = _refunds(payments);
 
   final DateRange range;
 
@@ -41,8 +42,28 @@ class HistoryReport {
   final StatusTotal success;
   final StatusTotal cancel;
 
-  /// Возвраты, включая «в обработке». Бэк их пока не присылает.
+  /// Возвраты, включая «в обработке» и частичные — по сумме возврата,
+  /// а не платежа.
   final StatusTotal refunded;
+}
+
+StatusTotal _refunds(List<Payment> payments) {
+  var count = 0;
+  var cents = 0;
+  for (final p in payments) {
+    // Возвращён целиком или в обработке, а сумму бэк не прислал — вся.
+    final whole =
+        (p.status == PaymentStatus.refunded && p.refundedAmount <= 0) ||
+        p.status == PaymentStatus.refundPending;
+    if (whole) {
+      count++;
+      cents += toCents(p.amount);
+    } else if (p.refundedAmount > 0) {
+      count++;
+      cents += toCents(p.refundedAmount);
+    }
+  }
+  return StatusTotal(count, cents / 100);
 }
 
 StatusTotal _total(List<Payment> payments, Set<PaymentStatus> statuses) {

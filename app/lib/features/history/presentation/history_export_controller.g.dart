@@ -48,7 +48,7 @@ final class HistoryExportControllerProvider
 }
 
 String _$historyExportControllerHash() =>
-    r'c5cda98f1d82f9f5ab3b46dff07ebf0f1a453a2c';
+    r'a082a1aa7a20d3b4f001701cfe2ec8b9bae6d157';
 
 /// Отчёт в PDF: все операции периода → PDF → окно «Поделиться».
 /// Состояние — идёт ли выгрузка (кнопка показывает загрузку).

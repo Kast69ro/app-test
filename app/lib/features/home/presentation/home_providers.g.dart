@@ -183,3 +183,52 @@ final class TodaySummaryProvider
 }
 
 String _$todaySummaryHash() => r'd8a7058371264ffaa1d198bdd3a269153d644716';
+
+/// «Возврат за сегодня»: блок `refunded` сводки плюс возвраты, оформленные
+/// на телефоне (концепт). `null` — ни того ни другого, плитка с прочерком.
+
+@ProviderFor(todayRefunds)
+final todayRefundsProvider = TodayRefundsProvider._();
+
+/// «Возврат за сегодня»: блок `refunded` сводки плюс возвраты, оформленные
+/// на телефоне (концепт). `null` — ни того ни другого, плитка с прочерком.
+
+final class TodayRefundsProvider
+    extends $FunctionalProvider<Totals?, Totals?, Totals?>
+    with $Provider<Totals?> {
+  /// «Возврат за сегодня»: блок `refunded` сводки плюс возвраты, оформленные
+  /// на телефоне (концепт). `null` — ни того ни другого, плитка с прочерком.
+  TodayRefundsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'todayRefundsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$todayRefundsHash();
+
+  @$internal
+  @override
+  $ProviderElement<Totals?> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  Totals? create(Ref ref) {
+    return todayRefunds(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Totals? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Totals?>(value),
+    );
+  }
+}
+
+String _$todayRefundsHash() => r'4f141d89b84c6072b6024ce31c0820d15d39197d';

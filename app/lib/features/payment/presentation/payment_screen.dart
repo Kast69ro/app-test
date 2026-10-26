@@ -9,11 +9,13 @@ import '../../../core/utils/money_format.dart';
 import '../../../core/widgets/info_card.dart';
 import '../../../core/widgets/sheet_page.dart';
 import '../../../core/widgets/text_link.dart';
+import '../../../app/routes.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../auth/presentation/session_controller.dart';
 import '../../receipt/data/receipt_sharer.dart';
 import '../../receipt/domain/receipt.dart';
 import '../../receipt/presentation/receipt_pdf.dart';
+import '../../refund/presentation/refund_providers.dart';
 import '../domain/payment.dart';
 import 'payment_status_style.dart';
 import 'widgets/payment_actions.dart';
@@ -22,6 +24,7 @@ import 'widgets/status_chip.dart';
 
 /// Карточка операции. Прототип: `POS Terminal.dc.html`, стр. 135–174.
 /// Вместо «Печать чека» — «Поделиться чеком» (только для оплаченных).
+/// «Возврат платежа» открывает [RefundScreen] (полный или частичный).
 ///
 /// Открывается шторкой поверх истории (см. [SheetPage]): закрыть можно
 /// свайпом вниз, тапом по затемнению или кнопкой «← Назад».
@@ -66,7 +69,10 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final session = ref.watch(sessionControllerProvider).value?.session;
-    final p = widget.payment;
+    // С учётом возвратов, сделанных на телефоне (концепт).
+    final p = ref.watch(effectivePaymentProvider(widget.payment));
+    final refunds = ref.watch(paymentRefundsProvider(widget.payment));
+    final canRefund = ref.watch(refundAvailableProvider(widget.payment));
     final status = PaymentStatusStyle.of(p.status, l, context.colors);
     final at = p.createdAt;
     final terminalId = session?.terminalId ?? '';
@@ -113,10 +119,18 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                       orDash(terminalId.isNotEmpty ? terminalId : terminalName),
                     ),
                     InfoRow(l.settingsStore, orDash(session?.storeName ?? '')),
+                    if (p.refundedAmount > 0) ...[
+                      InfoRow(l.paymentRefunded, formatMoney(p.refundedAmount)),
+                      if (p.refundableCents > 0)
+                        InfoRow(
+                          l.paymentRefundable,
+                          formatMoney(p.refundableCents / 100),
+                        ),
+                    ],
                   ],
                 ),
                 const SizedBox(height: 12),
-                PaymentTrail(payment: p),
+                PaymentTrail(payment: p, refunds: refunds),
               ],
             ),
           ),
@@ -124,8 +138,19 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
       ),
       bottom: _Actions(
         children: [
-          RefundButton(label: l.paymentRefund),
-          if (p.status == PaymentStatus.success)
+          // Возвращён целиком — кнопка не нужна.
+          if (p.status != PaymentStatus.refunded &&
+              p.status != PaymentStatus.refundPending)
+            RefundButton(
+              label: p.refundedAmount > 0
+                  ? l.paymentRefundAgain
+                  : l.paymentRefund,
+              onTap: canRefund
+                  ? () => context.push(Routes.refund, extra: widget.payment)
+                  : null,
+            ),
+          if (p.status == PaymentStatus.success ||
+              p.status == PaymentStatus.partiallyRefunded)
             ShareReceiptButton(
               key: _shareKey,
               label: switch (_share) {

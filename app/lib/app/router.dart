@@ -13,6 +13,7 @@ import '../features/home/presentation/qr_fullscreen_screen.dart';
 import '../features/payment/domain/payment.dart';
 import '../features/payment/presentation/payment_screen.dart';
 import '../features/pin/presentation/change_pin_screen.dart';
+import '../features/refund/presentation/refund_screen.dart';
 import '../features/pin/presentation/pin_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
 import 'main_shell.dart';
@@ -130,6 +131,16 @@ GoRouter router(Ref ref) {
                       key: state.pageKey,
                       child: PaymentScreen(payment: state.extra! as Payment),
                     ),
+                  ),
+                  // Поверх шторки операции, отдельной страницей: на ней
+                  // клавиатура и ввод кода.
+                  GoRoute(
+                    path: 'refund',
+                    parentNavigatorKey: rootKey,
+                    redirect: (context, state) =>
+                        state.extra is Payment ? null : Routes.history,
+                    builder: (context, state) =>
+                        RefundScreen(payment: state.extra! as Payment),
                   ),
                 ],
               ),

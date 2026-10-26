@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PaymentDto {
 
- String? get sender;@JsonKey(name: 'sender_bank_id') int? get senderBankId; num get amount; String? get status;@JsonKey(name: 'creation_datetime') String? get creationDatetime;
+ Object? get id; String? get sender;@JsonKey(name: 'sender_bank_id') int? get senderBankId; num get amount; String? get status;@JsonKey(name: 'creation_datetime') String? get creationDatetime;@JsonKey(name: 'refunded_amount') num? get refundedAmount;
 /// Create a copy of PaymentDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $PaymentDtoCopyWith<PaymentDto> get copyWith => _$PaymentDtoCopyWithImpl<Payment
 @override
 bool operator ==(Object other) {
   final _this = this as PaymentDto;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PaymentDto&&(identical(other.sender, _this.sender) || other.sender == _this.sender)&&(identical(other.senderBankId, _this.senderBankId) || other.senderBankId == _this.senderBankId)&&(identical(other.amount, _this.amount) || other.amount == _this.amount)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.creationDatetime, _this.creationDatetime) || other.creationDatetime == _this.creationDatetime));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PaymentDto&&const DeepCollectionEquality().equals(other.id, _this.id)&&(identical(other.sender, _this.sender) || other.sender == _this.sender)&&(identical(other.senderBankId, _this.senderBankId) || other.senderBankId == _this.senderBankId)&&(identical(other.amount, _this.amount) || other.amount == _this.amount)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.creationDatetime, _this.creationDatetime) || other.creationDatetime == _this.creationDatetime)&&(identical(other.refundedAmount, _this.refundedAmount) || other.refundedAmount == _this.refundedAmount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as PaymentDto;
-  return Object.hash(runtimeType,_this.sender,_this.senderBankId,_this.amount,_this.status,_this.creationDatetime);
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.id),_this.sender,_this.senderBankId,_this.amount,_this.status,_this.creationDatetime,_this.refundedAmount);
 }
 
 @override
 String toString() {
   final _this = this as PaymentDto;
-  return 'PaymentDto(sender: ${_this.sender}, senderBankId: ${_this.senderBankId}, amount: ${_this.amount}, status: ${_this.status}, creationDatetime: ${_this.creationDatetime})';
+  return 'PaymentDto(id: ${_this.id}, sender: ${_this.sender}, senderBankId: ${_this.senderBankId}, amount: ${_this.amount}, status: ${_this.status}, creationDatetime: ${_this.creationDatetime}, refundedAmount: ${_this.refundedAmount})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $PaymentDtoCopyWith<$Res>  {
   factory $PaymentDtoCopyWith(PaymentDto value, $Res Function(PaymentDto) _then) = _$PaymentDtoCopyWithImpl;
 @useResult
 $Res call({
- String? sender,@JsonKey(name: 'sender_bank_id') int? senderBankId, num amount, String? status,@JsonKey(name: 'creation_datetime') String? creationDatetime
+ Object? id, String? sender,@JsonKey(name: 'sender_bank_id') int? senderBankId, num amount, String? status,@JsonKey(name: 'creation_datetime') String? creationDatetime,@JsonKey(name: 'refunded_amount') num? refundedAmount
 });
 
 
@@ -71,14 +71,15 @@ class _$PaymentDtoCopyWithImpl<$Res>
 
 /// Create a copy of PaymentDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? sender = freezed,Object? senderBankId = freezed,Object? amount = null,Object? status = freezed,Object? creationDatetime = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? sender = freezed,Object? senderBankId = freezed,Object? amount = null,Object? status = freezed,Object? creationDatetime = freezed,Object? refundedAmount = freezed,}) {
   return _then(PaymentDto(
-sender: freezed == sender ? _self.sender : sender // ignore: cast_nullable_to_non_nullable
+id: freezed == id ? _self.id : id ,sender: freezed == sender ? _self.sender : sender // ignore: cast_nullable_to_non_nullable
 as String?,senderBankId: freezed == senderBankId ? _self.senderBankId : senderBankId // ignore: cast_nullable_to_non_nullable
 as int?,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
 as num,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String?,creationDatetime: freezed == creationDatetime ? _self.creationDatetime : creationDatetime // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,refundedAmount: freezed == refundedAmount ? _self.refundedAmount : refundedAmount // ignore: cast_nullable_to_non_nullable
+as num?,
   ));
 }
 
@@ -163,10 +164,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? sender, @JsonKey(name: 'sender_bank_id')  int? senderBankId,  num amount,  String? status, @JsonKey(name: 'creation_datetime')  String? creationDatetime)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Object? id,  String? sender, @JsonKey(name: 'sender_bank_id')  int? senderBankId,  num amount,  String? status, @JsonKey(name: 'creation_datetime')  String? creationDatetime, @JsonKey(name: 'refunded_amount')  num? refundedAmount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PaymentDto() when $default != null:
-return $default(_that.sender,_that.senderBankId,_that.amount,_that.status,_that.creationDatetime);case _:
+return $default(_that.id,_that.sender,_that.senderBankId,_that.amount,_that.status,_that.creationDatetime,_that.refundedAmount);case _:
   return orElse();
 
 }
@@ -184,10 +185,10 @@ return $default(_that.sender,_that.senderBankId,_that.amount,_that.status,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? sender, @JsonKey(name: 'sender_bank_id')  int? senderBankId,  num amount,  String? status, @JsonKey(name: 'creation_datetime')  String? creationDatetime)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Object? id,  String? sender, @JsonKey(name: 'sender_bank_id')  int? senderBankId,  num amount,  String? status, @JsonKey(name: 'creation_datetime')  String? creationDatetime, @JsonKey(name: 'refunded_amount')  num? refundedAmount)  $default,) {final _that = this;
 switch (_that) {
 case _PaymentDto():
-return $default(_that.sender,_that.senderBankId,_that.amount,_that.status,_that.creationDatetime);case _:
+return $default(_that.id,_that.sender,_that.senderBankId,_that.amount,_that.status,_that.creationDatetime,_that.refundedAmount);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -204,10 +205,10 @@ return $default(_that.sender,_that.senderBankId,_that.amount,_that.status,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? sender, @JsonKey(name: 'sender_bank_id')  int? senderBankId,  num amount,  String? status, @JsonKey(name: 'creation_datetime')  String? creationDatetime)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Object? id,  String? sender, @JsonKey(name: 'sender_bank_id')  int? senderBankId,  num amount,  String? status, @JsonKey(name: 'creation_datetime')  String? creationDatetime, @JsonKey(name: 'refunded_amount')  num? refundedAmount)?  $default,) {final _that = this;
 switch (_that) {
 case _PaymentDto() when $default != null:
-return $default(_that.sender,_that.senderBankId,_that.amount,_that.status,_that.creationDatetime);case _:
+return $default(_that.id,_that.sender,_that.senderBankId,_that.amount,_that.status,_that.creationDatetime,_that.refundedAmount);case _:
   return null;
 
 }
@@ -219,14 +220,16 @@ return $default(_that.sender,_that.senderBankId,_that.amount,_that.status,_that.
 @JsonSerializable()
 
 class _PaymentDto extends PaymentDto {
-  const _PaymentDto({this.sender, @JsonKey(name: 'sender_bank_id') this.senderBankId, this.amount = 0, this.status, @JsonKey(name: 'creation_datetime') this.creationDatetime}): super._();
+  const _PaymentDto({this.id, this.sender, @JsonKey(name: 'sender_bank_id') this.senderBankId, this.amount = 0, this.status, @JsonKey(name: 'creation_datetime') this.creationDatetime, @JsonKey(name: 'refunded_amount') this.refundedAmount}): super._();
   factory _PaymentDto.fromJson(Map<String, dynamic> json) => _$PaymentDtoFromJson(json);
 
+@override final  Object? id;
 @override final  String? sender;
 @override@JsonKey(name: 'sender_bank_id') final  int? senderBankId;
 @override@JsonKey() final  num amount;
 @override final  String? status;
 @override@JsonKey(name: 'creation_datetime') final  String? creationDatetime;
+@override@JsonKey(name: 'refunded_amount') final  num? refundedAmount;
 
 /// Create a copy of PaymentDto
 /// with the given fields replaced by the non-null parameter values.
@@ -241,18 +244,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PaymentDto&&(identical(other.sender, sender) || other.sender == sender)&&(identical(other.senderBankId, senderBankId) || other.senderBankId == senderBankId)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.status, status) || other.status == status)&&(identical(other.creationDatetime, creationDatetime) || other.creationDatetime == creationDatetime));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PaymentDto&&const DeepCollectionEquality().equals(other.id, id)&&(identical(other.sender, sender) || other.sender == sender)&&(identical(other.senderBankId, senderBankId) || other.senderBankId == senderBankId)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.status, status) || other.status == status)&&(identical(other.creationDatetime, creationDatetime) || other.creationDatetime == creationDatetime)&&(identical(other.refundedAmount, refundedAmount) || other.refundedAmount == refundedAmount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,sender,senderBankId,amount,status,creationDatetime);
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(id),sender,senderBankId,amount,status,creationDatetime,refundedAmount);
 }
 
 @override
 String toString() {
-    return 'PaymentDto(sender: $sender, senderBankId: $senderBankId, amount: $amount, status: $status, creationDatetime: $creationDatetime)';
+    return 'PaymentDto(id: $id, sender: $sender, senderBankId: $senderBankId, amount: $amount, status: $status, creationDatetime: $creationDatetime, refundedAmount: $refundedAmount)';
 }
 
 
@@ -263,7 +266,7 @@ abstract mixin class _$PaymentDtoCopyWith<$Res> implements $PaymentDtoCopyWith<$
   factory _$PaymentDtoCopyWith(_PaymentDto value, $Res Function(_PaymentDto) _then) = __$PaymentDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String? sender,@JsonKey(name: 'sender_bank_id') int? senderBankId, num amount, String? status,@JsonKey(name: 'creation_datetime') String? creationDatetime
+ Object? id, String? sender,@JsonKey(name: 'sender_bank_id') int? senderBankId, num amount, String? status,@JsonKey(name: 'creation_datetime') String? creationDatetime,@JsonKey(name: 'refunded_amount') num? refundedAmount
 });
 
 
@@ -280,14 +283,15 @@ class __$PaymentDtoCopyWithImpl<$Res>
 
 /// Create a copy of PaymentDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? sender = freezed,Object? senderBankId = freezed,Object? amount = null,Object? status = freezed,Object? creationDatetime = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? sender = freezed,Object? senderBankId = freezed,Object? amount = null,Object? status = freezed,Object? creationDatetime = freezed,Object? refundedAmount = freezed,}) {
   return _then(_PaymentDto(
-sender: freezed == sender ? _self.sender : sender // ignore: cast_nullable_to_non_nullable
+id: freezed == id ? _self.id : id ,sender: freezed == sender ? _self.sender : sender // ignore: cast_nullable_to_non_nullable
 as String?,senderBankId: freezed == senderBankId ? _self.senderBankId : senderBankId // ignore: cast_nullable_to_non_nullable
 as int?,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
 as num,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String?,creationDatetime: freezed == creationDatetime ? _self.creationDatetime : creationDatetime // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,refundedAmount: freezed == refundedAmount ? _self.refundedAmount : refundedAmount // ignore: cast_nullable_to_non_nullable
+as num?,
   ));
 }
 

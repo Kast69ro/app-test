@@ -8,4 +8,5 @@ abstract final class Routes {
   static const changePin = '/home/settings/pin';
   static const history = '/history';
   static const payment = '/history/payment';
+  static const refund = '/history/refund';
 }

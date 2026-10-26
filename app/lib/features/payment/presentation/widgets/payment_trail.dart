@@ -4,16 +4,26 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/utils/date_format.dart';
+import '../../../../core/utils/money_format.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../refund/domain/refund.dart';
 import '../../domain/payment.dart';
 import '../payment_status_style.dart';
 
 /// «Ход операции» — как в прототипе (стр. 155–163): три шага с одним временем.
 /// Отдельных времён шагов бэк не отдаёт (вопрос 5 в `docs/plan.md`).
+/// После оплаты — по шагу на каждый возврат.
 class PaymentTrail extends StatelessWidget {
-  const PaymentTrail({super.key, required this.payment});
+  const PaymentTrail({
+    super.key,
+    required this.payment,
+    this.refunds = const [],
+  });
 
   final Payment payment;
+
+  /// Возвраты с этого телефона, от старых к новым.
+  final List<Refund> refunds;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +59,26 @@ class PaymentTrail extends StatelessWidget {
           const SizedBox(height: 12),
           _Step(l.paymentTrailScanned, time, context.colors.unknownDot),
           const SizedBox(height: 12),
-          _Step(status.label, time, status.dot),
+          // Возвращённый платёж сначала был оплачен.
+          if (payment.status.wasPaid)
+            _Step(l.statusSuccess, time, context.colors.successDot)
+          else
+            _Step(status.label, time, status.dot),
+          for (final r in refunds) ...[
+            const SizedBox(height: 12),
+            _Step(
+              l.paymentTrailRefund(formatMoney(r.amountCents / 100)),
+              formatTime(r.createdAt),
+              context.colors.refundDot,
+            ),
+          ],
+          // Возврат пришёл с бэка — времени и суммы шагов не знаем.
+          if (refunds.isEmpty &&
+              payment.status.wasPaid &&
+              payment.status != PaymentStatus.success) ...[
+            const SizedBox(height: 12),
+            _Step(status.label, '', status.dot),
+          ],
         ],
       ),
     );
