@@ -8,6 +8,7 @@ part of 'payment_dto.dart';
 
 _PaymentDto _$PaymentDtoFromJson(Map<String, dynamic> json) => _PaymentDto(
   id: json['id'],
+  type: json['type'] as String?,
   sender: json['sender'] as String?,
   senderBankId: (json['sender_bank_id'] as num?)?.toInt(),
   amount: json['amount'] as num? ?? 0,
@@ -19,6 +20,7 @@ _PaymentDto _$PaymentDtoFromJson(Map<String, dynamic> json) => _PaymentDto(
 Map<String, dynamic> _$PaymentDtoToJson(_PaymentDto instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'type': instance.type,
       'sender': instance.sender,
       'sender_bank_id': instance.senderBankId,
       'amount': instance.amount,

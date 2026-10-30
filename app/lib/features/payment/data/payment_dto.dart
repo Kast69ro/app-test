@@ -11,6 +11,8 @@ abstract class PaymentDto with _$PaymentDto {
   const factory PaymentDto({
     // Число или строка — как решит бэк.
     Object? id,
+    // `internal` — клиент нашего банка, `external` — межбанк.
+    String? type,
     String? sender,
     @JsonKey(name: 'sender_bank_id') int? senderBankId,
     @Default(0) num amount,
@@ -31,6 +33,7 @@ abstract class PaymentDto with _$PaymentDto {
     return Payment(
       id: (rawId == null || rawId.isEmpty) ? null : rawId,
       sender: (name == null || name.isEmpty) ? '—' : name,
+      type: PaymentType.parse(type),
       senderBankId: senderBankId,
       amount: amount.toDouble(),
       status: parsed,

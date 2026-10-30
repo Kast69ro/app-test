@@ -21,7 +21,9 @@ Map<String, Object?> payment(
   DateTime at, {
   String status = 'success',
   String sender = 'Душанбе Сити Банк',
+  String? type,
 }) => {
+  'type': ?type,
   'sender': sender,
   'amount': amount,
   'status': status,
@@ -75,6 +77,30 @@ void main() {
     expect(find.text('12:05'), findsOneWidget);
     // Всё загружено — кнопки нет.
     expect(find.textContaining('Показать ещё'), findsNothing);
+  });
+
+  testWidgets('клиент ActivBank — имя плательщика и метка банка', (
+    tester,
+  ) async {
+    final backend = FakeBackend()
+      ..history = [
+        payment(
+          44.55,
+          today.add(const Duration(minutes: 5)),
+          type: 'internal',
+          sender: 'КУРБОНОВ Мухаммадшариф',
+        ),
+        payment(150, today, type: 'external'),
+      ];
+    // Маленький экран и крупный шрифт — третья строка не вылезает.
+    await pumpTestApp(tester, backend);
+    await signIn(tester);
+    await openHistory(tester);
+
+    expect(find.text('КУРБОНОВ Мухаммадшариф'), findsOneWidget);
+    // Метка только у внутрибанковского, у межбанка — название банка.
+    expect(find.text('ActivBank · внутри банка'), findsOneWidget);
+    expect(find.text('Душанбе Сити Банк'), findsOneWidget);
   });
 
   testWidgets('чип статуса по ширине текста, рядом с суммой', (tester) async {

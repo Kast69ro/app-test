@@ -76,7 +76,8 @@ class _RefundScreenState extends ConsumerState<RefundScreen> {
             ? l.refundDonePending
             : l.refundDoneText(
                 formatMoney((s.result?.amountCents ?? s.amountCents) / 100),
-                p.sender,
+                // У клиента ActivBank в sender — имя, а не банк.
+                p.isInternal ? l.paymentOurBank : p.sender,
               ),
         pending: s.result?.status == RefundStatus.pending,
         buttonLabel: l.refundDone,

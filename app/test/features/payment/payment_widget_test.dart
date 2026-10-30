@@ -73,6 +73,37 @@ void main() {
     expect(find.byType(HistoryRow), findsOneWidget);
   });
 
+  testWidgets('клиент ActivBank: плательщик, банк и вид перевода', (
+    tester,
+  ) async {
+    await openPayment(
+      tester,
+      payment(44.55, at, type: 'internal', sender: 'КУРБОНОВ Мухаммадшариф'),
+      size: const Size(390, 844),
+    );
+
+    expect(inSheet(find.text('Плательщик')), findsOneWidget);
+    expect(inSheet(find.text('КУРБОНОВ Мухаммадшариф')), findsOneWidget);
+    expect(inSheet(find.text('ActivBank')), findsOneWidget);
+    expect(inSheet(find.text('Внутри банка')), findsOneWidget);
+    // Имя человека не подписываем как банк.
+    expect(inSheet(find.text('Банк-отправитель')), findsNothing);
+    expect(find.text('Поделиться чеком'), findsOneWidget);
+  });
+
+  testWidgets('межбанк: банк-отправитель, без полей ActivBank', (tester) async {
+    await openPayment(
+      tester,
+      payment(150, at, type: 'external'),
+      size: const Size(390, 844),
+    );
+
+    expect(inSheet(find.text('Банк-отправитель')), findsOneWidget);
+    expect(inSheet(find.text('Душанбе Сити Банк')), findsOneWidget);
+    expect(inSheet(find.text('Плательщик')), findsNothing);
+    expect(inSheet(find.text('Внутри банка')), findsNothing);
+  });
+
   testWidgets('шторка закрывается свайпом вниз', (tester) async {
     await openPayment(tester, payment(1234.5, at), size: const Size(390, 844));
 

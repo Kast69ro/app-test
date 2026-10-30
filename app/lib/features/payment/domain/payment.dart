@@ -40,6 +40,19 @@ enum PaymentStatus {
   };
 }
 
+/// Откуда пришли деньги: из другого банка или со счёта клиента ActivBank.
+enum PaymentType {
+  /// Межбанк: в `sender` — название банка-отправителя.
+  external,
+
+  /// Внутри банка (us-on-us): в `sender` — имя плательщика.
+  internal;
+
+  /// Без поля `type` (старый бэк) — межбанк, как было до него.
+  static PaymentType parse(String? raw) =>
+      raw?.trim().toLowerCase() == 'internal' ? internal : external;
+}
+
 /// Входящий платёж по QR.
 @immutable
 class Payment {
@@ -51,15 +64,21 @@ class Payment {
     this.senderBankId,
     this.id,
     this.refundedAmount = 0,
+    this.type = PaymentType.external,
   });
 
   /// ID платежа на бэке. Пока бэк его не отдаёт — `null`
   /// (P1 в `docs/backend_requirements.md`).
   final String? id;
 
-  /// Готовое название банка отправителя (`—`, если бэк не прислал).
+  /// Банк-отправитель или, для [PaymentType.internal], имя плательщика
+  /// (`—`, если бэк не прислал).
   final String sender;
+  final PaymentType type;
   final int? senderBankId;
+
+  /// Клиент ActivBank: в [sender] — имя человека, а не банк.
+  bool get isInternal => type == PaymentType.internal;
 
   /// Сумма в TJS.
   final double amount;
@@ -93,6 +112,7 @@ class Payment {
     return Payment(
       id: id,
       sender: sender,
+      type: type,
       senderBankId: senderBankId,
       amount: amount,
       createdAt: createdAt,
@@ -108,6 +128,7 @@ class Payment {
       other is Payment &&
       other.id == id &&
       other.sender == sender &&
+      other.type == type &&
       other.senderBankId == senderBankId &&
       other.amount == amount &&
       other.status == status &&
@@ -118,6 +139,7 @@ class Payment {
   int get hashCode => Object.hash(
     id,
     sender,
+    type,
     senderBankId,
     amount,
     status,
