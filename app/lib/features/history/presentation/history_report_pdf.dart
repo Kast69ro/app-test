@@ -230,7 +230,8 @@ class _Columns {
       no: pw.Text(l.reportNumber, style: style),
       date: pw.Text(l.paymentDate, style: style),
       time: pw.Text(l.paymentTime, style: style),
-      bank: pw.Text(l.paymentBank, style: style),
+      // Межбанк — банк, клиент ActivBank — имя плательщика.
+      bank: pw.Text(l.reportSender, style: style),
       status: pw.Text(l.receiptStatus, style: style),
       amount: pw.Text(l.receiptAmount, style: style),
       borderColor: _colors.border,

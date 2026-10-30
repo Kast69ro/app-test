@@ -66,6 +66,8 @@ class HistoryRow extends ConsumerWidget {
                               status: status,
                               sender: p.sender,
                               time: time,
+                              // Клиент ActivBank: в sender — имя, поясняем.
+                              tag: p.isInternal ? l.historyInternalTag : null,
                             ),
                           ),
                         ),
@@ -89,6 +91,7 @@ class _Content extends StatelessWidget {
     required this.status,
     required this.sender,
     required this.time,
+    this.tag,
   });
 
   final String amount;
@@ -96,6 +99,9 @@ class _Content extends StatelessWidget {
   final PaymentStatusStyle status;
   final String sender;
   final String time;
+
+  /// Третья строка под отправителем, `null` — без неё.
+  final String? tag;
 
   @override
   Widget build(BuildContext context) {
@@ -140,6 +146,17 @@ class _Content extends StatelessWidget {
             ),
           ],
         ),
+        if (tag != null) ...[
+          const SizedBox(height: 4),
+          Text(
+            tag!,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.monoCaption.copyWith(
+              color: context.colors.textSecondary,
+            ),
+          ),
+        ],
       ],
     );
   }

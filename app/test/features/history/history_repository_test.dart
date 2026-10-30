@@ -62,6 +62,48 @@ void main() {
       ]);
     });
 
+    test('type: internal — клиент ActivBank, без type — межбанк', () async {
+      final t = fakeApi(
+        (_) async => jsonBody(200, {
+          'total': 3,
+          'payments': [
+            {
+              'type': 'internal',
+              'sender': 'КУРБОНОВ Мухаммадшариф',
+              'sender_bank_id': null,
+              'amount': 44.55,
+              'status': 'success',
+              'creation_datetime': '2026-10-30T14:12:00',
+            },
+            {
+              'type': 'external',
+              'sender': 'Душанбе Сити Банк',
+              'sender_bank_id': 27,
+              'amount': 150,
+              'status': 'success',
+              'creation_datetime': '2026-10-30T14:10:00',
+            },
+            {
+              'sender': 'Алиф',
+              'amount': 20,
+              'status': 'success',
+              'creation_datetime': '2026-10-30T14:00:00',
+            },
+          ],
+        }),
+      );
+
+      final page = await HistoryRepository(t.client).getPage(offset: 0);
+
+      expect(page.payments.map((p) => p.type), [
+        PaymentType.internal,
+        PaymentType.external,
+        PaymentType.external,
+      ]);
+      expect(page.payments.first.isInternal, isTrue);
+      expect(page.payments.first.sender, 'КУРБОНОВ Мухаммадшариф');
+    });
+
     test('пустая история', () async {
       final t = fakeApi(
         (_) async => jsonBody(200, {'total': 0, 'count': 0, 'payments': []}),

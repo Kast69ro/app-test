@@ -297,6 +297,24 @@ class AppLocalizationsRu extends AppLocalizations {
   String get paymentBank => 'Банк-отправитель';
 
   @override
+  String get paymentPayer => 'Плательщик';
+
+  @override
+  String get paymentOurBank => 'ActivBank';
+
+  @override
+  String get paymentTransfer => 'Перевод';
+
+  @override
+  String get paymentTransferInternal => 'Внутри банка';
+
+  @override
+  String get historyInternalTag => 'ActivBank · внутри банка';
+
+  @override
+  String get reportSender => 'Банк / Плательщик';
+
+  @override
   String get paymentTrail => 'Ход операции';
 
   @override

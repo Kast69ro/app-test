@@ -112,7 +112,12 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                       at == null ? '—' : formatDayMonth(at),
                     ),
                     InfoRow(l.paymentTime, at == null ? '—' : formatTime(at)),
-                    InfoRow(l.paymentBank, p.sender),
+                    if (p.isInternal) ...[
+                      InfoRow(l.paymentPayer, p.sender),
+                      InfoRow(l.receiptBank, l.paymentOurBank),
+                      InfoRow(l.paymentTransfer, l.paymentTransferInternal),
+                    ] else
+                      InfoRow(l.paymentBank, p.sender),
                     // Как в прототипе: ID терминала, иначе название.
                     InfoRow(
                       l.settingsTerminal,

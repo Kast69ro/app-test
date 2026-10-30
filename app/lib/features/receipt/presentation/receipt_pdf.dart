@@ -42,7 +42,11 @@ class ReceiptPdf {
     final rows = [
       (l.paymentDate, at == null ? '—' : formatFullDate(at)),
       (l.paymentTime, at == null ? '—' : formatTime(at)),
-      (l.receiptBank, p.sender),
+      if (p.isInternal) ...[
+        (l.paymentPayer, p.sender),
+        (l.receiptBank, l.paymentOurBank),
+      ] else
+        (l.receiptBank, p.sender),
       (l.settingsStore, orDash(receipt.storeName)),
       (l.settingsTerminal, orDash(receipt.terminalName)),
       (l.settingsTerminalId, orDash(receipt.terminalId)),
